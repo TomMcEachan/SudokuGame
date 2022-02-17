@@ -6,12 +6,7 @@ using System.Threading.Tasks;
 
 namespace SudokuGame
 {
-    class Sudoku
+    class Player
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello world");
-            Console.ReadLine();
-        }
     }
 }
