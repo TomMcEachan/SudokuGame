@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SudokuGame
 {
-    class Program
+    class Sudoku
     {
         static void Main(string[] args)
         {
