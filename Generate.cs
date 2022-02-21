@@ -6,13 +6,23 @@ using System.Threading.Tasks;
 
 namespace SudokuGame
 {
-    class Program
+    class Generate
     {
-        static void Main(string[] args)
+        
+        public void GenerateGrid(int difficulty)
         {
 
-            Console.WriteLine("Hello world");
-            Console.ReadLine();
+            difficulty = 0;
         }
+        
+        
+       
+
+       
+
     }
+
 }
+
+  
+
