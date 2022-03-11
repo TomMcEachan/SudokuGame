@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Generate.cs" />
+    <Compile Include="Shuffle.cs" />
     <Compile Include="Solve.cs" />
     <Compile Include="Sudoku.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

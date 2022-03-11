@@ -9,10 +9,10 @@ namespace SudokuGame
     class Generate
     {
         
-        public void GenerateGrid(int difficulty)
+        public int[,] GenerateGrid(int[,] grid)
         {
-
-            difficulty = 0;
+            //Shuffle.ShuffleGrid(grid);
+            return grid;     
         }
         
         
