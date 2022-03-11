@@ -11,18 +11,21 @@ namespace SudokuGame
 
 
         //This method checks if the grid is empty. If it is not empty it solves the grid.
-        public void CheckSolve(int[,] grid)
+        public static int[,] CheckSolve(int[,] grid, int size)
         {
             if (grid.Length == 0)
             {
-                return;
+                return null;
             }
-            SolveGrid(grid);
+
+            SolveGrid(grid, size);
+
+            return grid;
         }
 
 
         //This method solves the grid
-        public static bool SolveGrid(int[,] grid)
+        public static bool SolveGrid(int[,] grid, int size)
         {
             for (int x = 0; x < grid.GetLength(0); x++)
             {
@@ -30,13 +33,13 @@ namespace SudokuGame
                 {
                     if (grid[x, y] == 0)
                     {
-                        for (int z = 1; z <= 9; z++)
+                        for (int z = 1; z <= size; z++)
                         {
                             if (isValid(grid, x, y, z))
                             {
                                 grid[x, y] = z;
 
-                                if (SolveGrid(grid))
+                                if (SolveGrid(grid, size))
                                     return true;
                                 else
                                     grid[x, y] = 0;
@@ -53,7 +56,7 @@ namespace SudokuGame
         //This method checks if a row or column is valid
         private static bool isValid(int[,] grid, int row, int column, int size)
         {
-            for (int x = 0; x < 9; x++)
+            for (int x = 0; x < size; x++)
             {
                 //check row  
                 if (grid[x, column] != 0 && grid[x, column] == size)
@@ -68,15 +71,9 @@ namespace SudokuGame
             return true;
         }
 
-
-
-
-
-
-
-
     }
-
 }
+
+
 
 
