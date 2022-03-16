@@ -11,13 +11,13 @@ namespace SudokuGame
     {
 
         //Global Variables
-        public static int easy = 6;
-        public static int medium = 9;
-        public static int hard = 12;
-        public static int extreme = 18;
-        public static int normal = 9;
-        public static int selectedModeValue;
-        public static int gridSizeNum;
+        private static int easy = 6;
+        private static int medium = 9;
+        private static int hard = 12;
+        private static int extreme = 18;
+        private static int normal = 9;
+        private static int selectedModeValue;
+        private static int gridSizeNum;
 
         //Empty Boards of varying difficulty 
         public static int[,] emptyGridEasy = new int[6, 6];
@@ -25,10 +25,9 @@ namespace SudokuGame
         public static int[,] emptyGridHard = new int[12, 12];
         public static int[,] emptyGridExtreme = new int[18, 18];
 
-
         //Test Grid
         public static int[,] testGrid =
-            {
+        {
             {5, 3, 0, 0, 7, 0, 0, 0, 0},
             {6, 0, 0, 1, 9, 5, 0, 0, 0},
             {0, 9, 8, 0, 0, 0, 6, 0, 0},
@@ -39,7 +38,39 @@ namespace SudokuGame
             {0, 0, 0, 4, 1, 9, 0, 0, 5},
             {0, 0, 0, 0, 8, 0, 0, 7, 9}
         };
-        
+
+
+        //Getters & Setters
+        public static int Easy 
+        { 
+            get => easy; set => easy = value; 
+        }
+        public static int Medium 
+        { 
+            get => medium; set => medium = value; 
+        }
+        public static int Hard
+        { 
+            get => hard; set => hard = value; 
+        }
+        public static int Extreme 
+        { 
+            get => extreme; set => extreme = value;
+        }
+        public static int Normal 
+        { 
+            get => normal; set => normal = value; 
+        }
+        public static int SelectedModeValue 
+        { 
+            get => selectedModeValue; set => selectedModeValue = value; 
+        }
+        public static int GridSizeNum
+        { 
+            get => gridSizeNum; set => gridSizeNum = value; 
+        }
+
+
         /* A utility method to print grid */
         static void printBoard(int[,] grid, int size)
         {
@@ -58,9 +89,9 @@ namespace SudokuGame
             Console.WriteLine("-----------------------------");
             Console.WriteLine("Welcome! This program generates unique, solvable Sudoku puzzles.");
             Console.WriteLine("To generate a puzzle, please select a difficulty level from the following options by typing 1, 2, 3, or 4.\n\n" +
-                                " 1 - Easy (Produces a simple 9x9 Sudoku puzzle to solve)\n" +
-                                " 2 - Medium (Produces a 12x12 Sudoku puzzle to solve)\n" +
-                                " 3 - Hard (Produces a 14x14 Sudoku puzzle to solve)\n" +
+                                " 1 - Easy (Produces a simple 6x6 Sudoku puzzle to solve)\n" +
+                                " 2 - Medium (Produces a 9x9 Sudoku puzzle to solve)\n" +
+                                " 3 - Hard (Produces a 12x12 Sudoku puzzle to solve)\n" +
                                 " 4 - Extreme (Produces a 18x18 Sudoku puzzle to solve\n\n");
             
             string selectedModeString = Console.ReadLine();
@@ -80,8 +111,8 @@ namespace SudokuGame
         
 
 
-        
-        static int[,] setSelectedOption(int selectedMode)
+        //This method gets the user specified grid 
+        static int[,] getGrid(int selectedMode)
         {
 
             int[,] grid;
@@ -89,19 +120,16 @@ namespace SudokuGame
             switch (selectedMode)
             {
                 case 1:
-                    selectedModeValue = easy;
+                    selectedModeValue = Easy;
                     Console.WriteLine("Generating an easy Sudoku puzzle....");
-                    gridSizeNum = easy;
+                    gridSizeNum = Easy;
                     grid = Solve.CheckSolve(emptyGridEasy, gridSizeNum);
-
                     break;
                 case 2:
                     selectedModeValue = medium;
                     Console.WriteLine("Generating a medium Sudoku puzzle....");
                     gridSizeNum = medium;
                     grid = Solve.CheckSolve(emptyGridMedium, gridSizeNum);
-
-
                     break;
                 case 3:
                     selectedModeValue = hard;
@@ -149,14 +177,13 @@ namespace SudokuGame
         }
 
 
-
         //This is the main method of the program
         static void Main(string[] args)
         {
             Generate generate = new Generate();
             
             int selected = printIntro();
-            int [,] selectedGrid = setSelectedOption(selected);
+            int [,] selectedGrid = getGrid(selected);
            
             print(selected, selectedGrid);
  
