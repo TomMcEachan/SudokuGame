@@ -54,7 +54,7 @@ namespace SudokuGame
 
 
         //This method checks if a row or column is valid
-        private static bool isValid(int[,] grid, int row, int column, int size)
+        public static bool isValid(int[,] grid, int row, int column, int size)
         {
             for (int x = 0; x < size; x++)
             {

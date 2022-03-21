@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,31 +7,28 @@ using System.Threading.Tasks;
 
 namespace SudokuGame
 {
-   /* class Shuffle
-    {
-       
-        public static T[,] ShuffleGrid<T>(T[,] grid)
+  class Shuffle
+  {
+        public static T[,] ShuffleGrid<T>(T[,] grid, Random rng)
         {
-            int rows = grid.GetLength(0);
-            int columns = grid.GetLength(1);
-            Random rng = new Random();
+            int p = grid.GetUpperBound(1) + 1;
 
-            T[,] randomGrid = new T[rows, columns];
-
-
-            int[] shuffleRows = Enumerable.Range(0, rows).ToArray();
-            int[] shuffleColumns = Enumerable.Range(0, columns).ToArray();
-
-            for (int n = shuffleRows[] - 1; n > 0; n--)
+            for (int i = grid.Length; i > 1;)
             {
-                int random = rng.Next(n + 1);
+                int z = rng.Next(i);
+                --i;
 
-                
+                int xr = i / p;
+                int xc = i % p;
+                int yr = z / p;
+                int yc = z % p;
+
+                T temp = grid[xr, xc];
+                grid[xr, xc] = grid[yr, yc];
+                grid[yr, yc] = temp;
             }
 
+            return grid;
         }
-
-        
-
-    } */
+  } 
 } 
