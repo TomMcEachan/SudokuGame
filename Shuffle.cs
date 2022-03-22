@@ -1,36 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SudokuGame
 {
-   /* class Shuffle
-    {
-       
-        public static T[,] ShuffleGrid<T>(T[,] grid)
+  class Shuffle
+  {
+       void ShuffleNums(int size, int [,] grid)
         {
-            int rows = grid.GetLength(0);
-            int columns = grid.GetLength(1);
             Random rng = new Random();
-
-            T[,] randomGrid = new T[rows, columns];
-
-
-            int[] shuffleRows = Enumerable.Range(0, rows).ToArray();
-            int[] shuffleColumns = Enumerable.Range(0, columns).ToArray();
-
-            for (int n = shuffleRows[] - 1; n > 0; n--)
+            for (int x = 0; x < size; x++)
             {
-                int random = rng.Next(n + 1);
-
-                
+                int random = rng.Next(size);
+                Swap(x, random, size, grid);
             }
-
         }
 
-        
+        private void Swap(int n1, int n2, int size, int[,] grid)
+        {
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    if (grid[x,y] == n1)
+                    {
+                        grid[x, y] = n2;
+                    } else if (grid[x,y] == n2)
+                    {
+                        grid[x, y] = n1;
+                    }
+                }
+            }
+        }
 
-    } */
+
+  } 
 } 
