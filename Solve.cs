@@ -11,38 +11,43 @@ namespace SudokuGame
 
 
         //This method checks if the grid is empty. If it is not empty it solves the grid.
-        public static int[,] CheckSolve(int[,] grid, int size)
+        public static int[,] SolveGrid(int[,] grid, int size, int sqr)
         {
-            if (grid.Length == 0)
+            if (grid.Length == 0 || grid == null)
             {
                 return null;
             }
 
-            SolveGrid(grid, size);
+            GenerateGrid(grid, size, sqr);
 
             return grid;
         }
 
 
-        //This method solves the grid
-        public static bool SolveGrid(int[,] grid, int size)
+        public static void GenerateGrid(int[,] grid, int size, int sqr)
         {
-            for (int x = 0; x < grid.GetLength(0); x++)
+            if (grid == null || grid.Length == 0)
+                return;
+            solve(grid, size, sqr);
+        }
+        private static bool solve(int[,] grid, int size, int sqr)
+        {
+            for (int i = 0; i < grid.GetLength(0); i++)
             {
-                for (int y = 0; y < grid.GetLength(1); y++)
+                for (int j = 0; j < grid.GetLength(1); j++)
                 {
-                    if (grid[x, y] == 0)
+                    if (grid[i, j] == 0)
                     {
-                        for (int z = 1; z <= size; z++)
+                        for (int c = 1; c <= size; c++)
                         {
-                            if (isValid(grid, x, y, z))
+                            if (isValid(grid, i, j, c, sqr))
                             {
-                                grid[x, y] = z;
+                                grid[i, j] = c;
 
-                                if (SolveGrid(grid, size))
+                                if (solve(grid, size, sqr))
                                     return true;
                                 else
-                                    grid[x, y] = 0;
+                                    grid[i, j] = 0;
                             }
                         }
                         return false;
@@ -51,28 +56,27 @@ namespace SudokuGame
             }
             return true;
         }
-
-
-        //This method checks if a row or column is valid
-        private static bool isValid(int[,] grid, int row, int column, int size)
+        private static bool isValid(int[,] grid, int row, int col, int c, int sqr)
         {
-            for (int x = 0; x < size; x++)
+            for (int i = 0; i < 9; i++)
             {
                 //check row  
-                if (grid[x, column] != 0 && grid[x, column] == size)
+                if (grid[i, col] != 0 && grid[i, col] == c)
                     return false;
                 //check column  
-                if (grid[row, x] != 0 && grid[row, x] == size)
+                if (grid[row, i] != 0 && grid[row, i] == c)
                     return false;
                 //check 3*3 block  
-                if (grid[3 * (row / 3) + x / 3, 3 * (column / 3) + x % 3] != 0 && grid[3 * (row / 3) + x / 3, 3 * (column / 3) + x % 3] == size)
+                if (grid[sqr * (row / sqr) + i / sqr, sqr * (col / sqr) + i % sqr] != 0 && grid[sqr * (row / sqr) + i / sqr, sqr * (col / sqr) + i % sqr] == c)
                     return false;
             }
             return true;
         }
 
     }
+
 }
+
 
 
 
