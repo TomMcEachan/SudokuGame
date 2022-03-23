@@ -6,25 +6,30 @@ namespace SudokuGame
     class Sudoku
     {
         //Global Variables
-        private static int[,] _grid;
-        private static int _size;
+        private static int[,] _grid; //This is the Sudoku Board (e.g, [9,9])
+        private static int _size; //This the size of each row/column (e.g, 9) 
+        private static int _difficulty; //This is the difficulty of the users game and removes the specified number of digits
+        
+        //Getters & Setters
+        public int[,] Grid { get => _grid; set => _grid = value; }
+        public int Size { get => _size; set => _size = value; }
+        public int Difficulty { get => _difficulty; set => _difficulty = value; }
 
-        //Sudoku Object Constructor
-        public Sudoku(int[,] grid, int size)
+
+        /// <summary>
+        /// This constructor represents a Sudoku Board
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="size"></param>
+        /// <param name="difficulty"></param>
+        public Sudoku(int[,] grid, int size, int difficulty)
         {
             Grid = grid;
             Size = size;
+            Difficulty = difficulty;
         }
 
-        //Getters & Setters
-        public int[,] Grid 
-        { 
-            get => _grid; set => _grid = value; 
-        }
-        public int Size 
-        { 
-            get => _size; set => _size = value; 
-        }
+        
 
         //Test Grid
         public static int[,] testGrid =
@@ -41,18 +46,40 @@ namespace SudokuGame
         };
 
 
-        /* A utility method to print grid */
-        static void printBoard(int[,] grid, int size)
+        /// <summary>
+        /// A utility method to print solved/generated Sudoku board
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="size"></param>
+        private static void printBoard(int[,] grid, int size)
         {
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
+                {
+                    if (j % 3 == 0 && j != 0)
+                    {
+                        Console.Write("| ");
+                    }
                     Console.Write(grid[i, j] + " ");
+                }
+
+                if (i % 3 == 2 && i != 8)
+                {
+                    Console.WriteLine();
+                    Console.Write("------+-------+------");
+                }
                 Console.WriteLine();
             }
+            Console.WriteLine();
         }
 
-        //This method prints the intro of the game for the player
+        /// <summary>
+        /// Lets the player select the difficulty of the game they want to play.
+        /// </summary>
+        /// <returns>
+        /// selectedModeInt
+        /// </returns>
         static int printIntro()
         {
             Console.WriteLine(FiggleFonts.Doom.Render("Sudoku Generator!"));
@@ -78,7 +105,13 @@ namespace SudokuGame
         }
 
 
-        //This method gets the user specified grid 
+        /// <summary>
+        /// This method gets the user specified grid 
+        /// </summary>
+        /// <param name="selectedMode"></param>
+        /// <returns>
+        /// This returns the sudoku grid based on the parameters set by the player
+        /// </returns>
         static int[,] getGrid(int selectedMode)
         {
 
@@ -89,54 +122,59 @@ namespace SudokuGame
             {
                 case 1:
                     grid = new int [9, 9];
-                    Console.WriteLine("Generating an easy Sudoku puzzle....");
-                    Sudoku easyBoard = new Sudoku(grid, 9);
-                    Generate.Create(easyBoard);
+                    Console.WriteLine("\n\nGenerating an easy Sudoku puzzle....\n\n");
+                    Sudoku easyBoard = new Sudoku(grid, 9, 34);
+                    grid = Generate.Create(easyBoard);
                     break;
                 case 2:
                     grid = new int[9, 9];
-                    Console.WriteLine("Generating an easy Sudoku puzzle....");
-                    Sudoku mediumBoard = new Sudoku(grid, 9);
-                    Generate.Create(mediumBoard);
+                    Console.WriteLine("\n\nGenerating a medium Sudoku puzzle....\n\n");
+                    Sudoku mediumBoard = new Sudoku(grid, 9, 57);
+                    grid = Generate.Create(mediumBoard);
                     break;
                 case 3:
                     grid = new int[9, 9];
-                    Console.WriteLine("Generating an easy Sudoku puzzle....");
-                    Sudoku hardBoard = new Sudoku(grid, 9);
-                    Generate.Create(hardBoard);
+                    Console.WriteLine("\n\nGenerating a hard Sudoku puzzle....\n\n");
+                    Sudoku hardBoard = new Sudoku(grid, 9, 64);
+                    grid = Generate.Create(hardBoard);
                     break;
                 case 4:
-                    grid = new int[9, 9];
-                    Console.WriteLine("Generating an easy Sudoku puzzle....");
-                    Sudoku extremeBoard = new Sudoku(grid, 9);
-                    Generate.Create(extremeBoard);
+                    grid = new int[12, 12];
+                    Console.WriteLine("\n\nGenerating an extreme Sudoku puzzle....\n\n");
+                    Sudoku extremeBoard = new Sudoku(grid, 12, 54);
+                    grid = Generate.Create(extremeBoard);
                     break;
                 default:
                     grid = new int[9, 9];
-                    Console.WriteLine("Generating an easy Sudoku puzzle....");
-                    Sudoku defaultBoard = new Sudoku(grid, 9);
-                    Generate.Create(defaultBoard);
+                    Console.WriteLine("\n\nGenerating an easy Sudoku puzzle....\n\n");
+                    Sudoku defaultBoard = new Sudoku(grid, 9, 57);
+                    grid = Generate.Create(defaultBoard);
                     break;
             }
 
             return grid;
         }
 
+        /// <summary>
+        /// This takes the generated board and prints it based on user selection
+        /// </summary>
+        /// <param name="selectedInt"></param>
+        /// <param name="grid"></param>
         static void print(int selectedInt, int[,] grid)
         {
             switch (selectedInt)
             {
                 case 1:
-                    printBoard(grid, 6);
+                    printBoard(grid, 9);
                     break;
                 case 2:
                     printBoard(grid, 9);
                     break;
                 case 3:
-                    printBoard(grid, 12);
+                    printBoard(grid, 9);
                     break;
                 case 4:
-                    printBoard(grid, 18);
+                    printBoard(grid, 12);
                     break;
                 default:
                     printBoard(grid, 9);
@@ -145,20 +183,30 @@ namespace SudokuGame
         }
 
 
+        
 
 
 
 
 
-
-        //This is the main method of the program
+        /// <summary>
+        /// The main method of the program
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             int selected = printIntro();
-            int[,] gameBoard = getGrid(selected);
+            int[,] generatedBoard = getGrid(selected);
 
-            print(selected, gameBoard);
+            print(selected, generatedBoard);
 
+            Solve solve = new Solve();
+
+            int[,] solvedBoard = solve.SolveGrid(generatedBoard, 9, 3);
+
+            Console.ReadLine();
+
+            print(selected, solvedBoard);
 
             Console.ReadLine();
 

@@ -11,26 +11,19 @@ namespace SudokuGame
 
 
         //This method checks if the grid is empty. If it is not empty it solves the grid.
-        public static int[,] SolveGrid(int[,] grid, int size, int sqr)
+        public int[,] SolveGrid(int[,] grid, int size, int sqr)
         {
             if (grid.Length == 0 || grid == null)
             {
                 return null;
             }
 
-            GenerateGrid(grid, size, sqr);
+            Solver(grid, size, sqr);
 
             return grid;
         }
 
-
-        public static void GenerateGrid(int[,] grid, int size, int sqr)
-        {
-            if (grid == null || grid.Length == 0)
-                return;
-            solve(grid, size, sqr);
-        }
-        private static bool solve(int[,] grid, int size, int sqr)
+        private static bool Solver(int[,] grid, int size, int sqr)
         {
             for (int i = 0; i < grid.GetLength(0); i++)
             {
@@ -44,7 +37,7 @@ namespace SudokuGame
                             {
                                 grid[i, j] = c;
 
-                                if (solve(grid, size, sqr))
+                                if (Solver(grid, size, sqr))
                                     return true;
                                 else
                                     grid[i, j] = 0;
