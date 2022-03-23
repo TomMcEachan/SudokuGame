@@ -5,33 +5,26 @@ namespace SudokuGame
 {
   class Shuffle
   {
-       void ShuffleNums(int size, int [,] grid)
+
+        Random rng = new Random();
+        public void ShuffleGrid<T>(T[,] grid)
         {
-            Random rng = new Random();
-            for (int x = 0; x < size; x++)
+            int w = grid.GetUpperBound(1) + 1;
+
+            for (int n = grid.Length; n > 1;)
             {
-                int random = rng.Next(size);
-                Swap(x, random, size, grid);
+                int k = rng.Next(n);
+                --n;
+
+                int dr = n / w;
+                int dc = n % w;
+                int sr = k / w;
+                int sc = k % w;
+
+                T temp = grid[dr, dc];
+                grid[dr, dc] = grid[sr, sc];
+                grid[sr, sc] = temp;
             }
         }
-
-        private void Swap(int n1, int n2, int size, int[,] grid)
-        {
-            for (int y = 0; y < size; y++)
-            {
-                for (int x = 0; x < size; x++)
-                {
-                    if (grid[x,y] == n1)
-                    {
-                        grid[x, y] = n2;
-                    } else if (grid[x,y] == n2)
-                    {
-                        grid[x, y] = n1;
-                    }
-                }
-            }
-        }
-
-
-  } 
+    } 
 } 
