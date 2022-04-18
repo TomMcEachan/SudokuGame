@@ -26,7 +26,7 @@ namespace SudokuGame
         /// <returns>
         /// This returns the generated board
         /// </returns>
-        public static int[,] Create(Sudoku board)
+        public static int[,] Create(Game board)
         {
             //Object Variables
             Grid = board.Grid;
