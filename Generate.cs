@@ -2,6 +2,9 @@
 
 namespace SudokuGame
 {
+    /// <summary>
+    /// Generation Code Adapted from code available at https://www.geeksforgeeks.org/program-sudoku-generator/ 
+    /// </summary>
     class Generate
     {
 
@@ -47,30 +50,36 @@ namespace SudokuGame
         }
 
 
-        // Sudoku Generator
+        /// <summary>
+        /// This method iterates through the different steps to generate a brand new game board
+        /// </summary>
         public void GenerateGrid()
-        {
-            // Fill the diagonal of SRN x SRN matrices
+        { 
             fillDiagonal();
-
-            // Fill remaining blocks
             fillRemaining(0, Sqr);
-
-            // Remove Randomly K digits to make game
             removeDigits();
         }
 
-        // Fill the diagonal SRN number of SRN x SRN matrices
+
+        /// <summary>
+        /// This method fills the diagonal of SQR matrices
+        /// </summary>
         void fillDiagonal()
         {
-
             for (int i = 0; i < Size; i = i + Sqr)
-
-                // for diagonal box, start coordinates->i==j
-                fillBox(i, i);
+            fillBox(i, i);
         }
 
-        // Returns false if given 3 x 3 block contains num.
+        
+        /// <summary>
+        /// This method checks if the 3 x 3 box contains a num
+        /// </summary>
+        /// <param name="rowStart"></param>
+        /// <param name="colStart"></param>
+        /// <param name="num"></param>
+        /// <returns>
+        /// True or False
+        /// </returns>
         bool unUsedInBox(int rowStart, int colStart, int num)
         {
             for (int i = 0; i < Sqr; i++)
@@ -81,7 +90,11 @@ namespace SudokuGame
             return true;
         }
 
-        // Fill a 3 x 3 matrix.
+        /// <summary>
+        /// Fills a 3x3 Block
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="col"></param>
         void fillBox(int row, int col)
         {
             int num;
@@ -98,16 +111,30 @@ namespace SudokuGame
                     Grid[row + i, col + j] = num;
                 }
             }
-        }
+        }     
 
-        // Random generator
+        /// <summary>
+        /// Creates a random number 
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
         int randomGenerator(int num)
         {
             Random rand = new Random();
             return (int)Math.Floor((double)(rand.NextDouble() * num + 1));
         }
 
-        // Check if safe to put in cell
+
+
+        /// <summary>
+        /// Checks if it is safe to put a number in a cell
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="j"></param>
+        /// <param name="num"></param>
+        /// <returns>
+        /// A safe number
+        /// </returns>
         bool CheckIfSafe(int i, int j, int num)
         {
             return (unUsedInRow(i, num) &&
@@ -115,7 +142,13 @@ namespace SudokuGame
                     unUsedInBox(i - i % Sqr, j - j % Sqr, num));
         }
 
-        // check in the row for existence
+
+
+        /// <summary>
+        /// Check that a row exists
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="num"></param>
         bool unUsedInRow(int i, int num)
         {
             for (int j = 0; j < Size; j++)
@@ -124,7 +157,12 @@ namespace SudokuGame
             return true;
         }
 
-        // check in the row for existence
+        /// <summary>
+        /// Check that a column exists
+        /// </summary>
+        /// <param name="j"></param>
+        /// <param name="num"></param>
+        /// <returns></returns>
         bool unUsedInCol(int j, int num)
         {
             for (int i = 0; i < Size; i++)
@@ -133,8 +171,12 @@ namespace SudokuGame
             return true;
         }
 
-        // A recursive function to fill remaining
-        // matrix
+
+        /// <summary>
+        /// This is a recursive function to fill in the matrix
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="j"></param>
         bool fillRemaining(int i, int j)
         {
             //  System.out.println(i+" "+j);
@@ -181,8 +223,9 @@ namespace SudokuGame
             return false;
         }
 
-        // Remove the K no. of digits to
-        // complete game
+        /// <summary>
+        /// This method removes a specified number of digits to create a playable game board
+        /// </summary>
         public void removeDigits()
         {
             int count = Remove;

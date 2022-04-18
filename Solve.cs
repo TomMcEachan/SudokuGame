@@ -8,9 +8,15 @@ namespace SudokuGame
 {
     public class Solve
     {
-
-
-        //This method checks if the grid is empty. If it is not empty it solves the grid.
+        /// <summary>
+        /// This method checks if the grid is empty. If it is not empty, it solves the grid. 
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="size"></param>
+        /// <param name="sqr"></param>
+        /// <returns>
+        /// A solved grid.
+        /// </returns>
         public int[,] SolveGrid(int[,] grid, int size, int sqr)
         {
             if (grid.Length == 0 || grid == null)
@@ -23,6 +29,16 @@ namespace SudokuGame
             return grid;
         }
 
+
+        /// <summary>
+        /// This method uses a recursive method to solve the sudoku game, checking that it is valid throughout. This is a backtracking method.
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="size"></param>
+        /// <param name="sqr"></param>
+        /// <returns>
+        /// True or False
+        /// </returns>
         private static bool Solver(int[,] grid, int size, int sqr)
         {
             for (int i = 0; i < grid.GetLength(0); i++)
@@ -49,6 +65,18 @@ namespace SudokuGame
             }
             return true;
         }
+
+        /// <summary>
+        /// This method checks whether or a number being placed in a box is valid
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="row"></param>
+        /// <param name="col"></param>
+        /// <param name="c"></param>
+        /// <param name="sqr"></param>
+        /// <returns>
+        /// True or False
+        /// </returns>
         private static bool isValid(int[,] grid, int row, int col, int c, int sqr)
         {
             for (int i = 0; i < 9; i++)
