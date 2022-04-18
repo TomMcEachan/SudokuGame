@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 using Figgle;
 
 namespace SudokuGame
@@ -9,11 +13,13 @@ namespace SudokuGame
         private static int[,] _grid; //This is the Sudoku Board (e.g, [9,9])
         private static int _size; //This the size of each row/column (e.g, 9) 
         private static int _difficulty; //This is the difficulty of the users game and removes the specified number of digits
+      
         
         //Getters & Setters
         public int[,] Grid { get => _grid; set => _grid = value; }
         public int Size { get => _size; set => _size = value; }
         public int Difficulty { get => _difficulty; set => _difficulty = value; }
+        
 
 
         /// <summary>
@@ -44,35 +50,6 @@ namespace SudokuGame
             {0, 0, 0, 4, 1, 9, 0, 0, 5},
             {0, 0, 0, 0, 8, 0, 0, 7, 9}
         };
-
-
-        /// <summary>
-        /// A utility method to print solved/generated Sudoku board
-        /// </summary>
-        /// <param name="grid"></param>
-        /// <param name="size"></param>
-        private static void printBoard(int[,] grid, int size)
-        {
-            for (int i = 0; i < size; i++)
-            {
-                for (int j = 0; j < size; j++)
-                {
-                    if (j % 3 == 0 && j != 0)
-                    {
-                        Console.Write("| ");
-                    }
-                    Console.Write(grid[i, j] + " ");
-                }
-
-                if (i % 3 == 2 && i != 8)
-                {
-                    Console.WriteLine();
-                    Console.Write("------+-------+------");
-                }
-                Console.WriteLine();
-            }
-            Console.WriteLine();
-        }
 
         /// <summary>
         /// Lets the player select the difficulty of the game they want to play.
@@ -141,7 +118,7 @@ namespace SudokuGame
                 case 4:
                     grid = new int[12, 12];
                     Console.WriteLine("\n\nGenerating an extreme Sudoku puzzle....\n\n");
-                    Sudoku extremeBoard = new Sudoku(grid, 12, 54);
+                    Sudoku extremeBoard = new Sudoku(grid, 12, 31);
                     grid = Generate.Create(extremeBoard);
                     break;
                 default:
@@ -153,41 +130,7 @@ namespace SudokuGame
             }
 
             return grid;
-        }
-
-        /// <summary>
-        /// This takes the generated board and prints it based on user selection
-        /// </summary>
-        /// <param name="selectedInt"></param>
-        /// <param name="grid"></param>
-        static void print(int selectedInt, int[,] grid)
-        {
-            switch (selectedInt)
-            {
-                case 1:
-                    printBoard(grid, 9);
-                    break;
-                case 2:
-                    printBoard(grid, 9);
-                    break;
-                case 3:
-                    printBoard(grid, 9);
-                    break;
-                case 4:
-                    printBoard(grid, 12);
-                    break;
-                default:
-                    printBoard(grid, 9);
-                    break;
-            }
-        }
-
-
-        
-
-
-
-
+        }   
 
         /// <summary>
         /// The main method of the program
@@ -195,18 +138,31 @@ namespace SudokuGame
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+
+            //Instantiate Classes
+            Print p = new Print();
+            Player player = new Player();
+
+            //Variables
             int selected = printIntro();
             int[,] generatedBoard = getGrid(selected);
+            int printNum;
+            int sqr;
+           
+            //Prints the empty board
+            printNum = p.print(selected, generatedBoard);
+            sqr = Convert.ToInt32(Math.Sqrt(printNum));
 
-            print(selected, generatedBoard);
+            //Player Makes their choice until board is complete
+            player.playerInput(generatedBoard, p);
 
+            //Solves the generated board and stores it in memory
             Solve solve = new Solve();
-
-            int[,] solvedBoard = solve.SolveGrid(generatedBoard, 9, 3);
+            int[,] solvedBoard = solve.SolveGrid(generatedBoard, printNum, sqr);
 
             Console.ReadLine();
 
-            print(selected, solvedBoard);
+            p.print(selected, solvedBoard);
 
             Console.ReadLine();
 
