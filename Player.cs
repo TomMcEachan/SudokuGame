@@ -32,11 +32,14 @@ namespace SudokuGame
                     playerColumnInt--; //Removes one from the value to ensure it works with 2d matrix
                     return playerColumnInt;
                 }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("That number is not valid. Please type a number between 1 and 9\n\n", Console.ForegroundColor);
+                }
                 
 
 
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("That number is not valid. Please type a number between 1 and 9\n\n", Console.ForegroundColor);
             }
 
             Console.ForegroundColor = ConsoleColor.Green;
@@ -68,10 +71,11 @@ namespace SudokuGame
                     playerRowInt--; //Removes one from the value to ensure it works with the 2d matrix
                     return playerRowInt;
                 }
-
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("That number is not valid. Please type a number between 1 and 9\n\n", Console.ForegroundColor);
-
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("That number is not valid. Please type a number between 1 and 9\n\n", Console.ForegroundColor);
+                }
             }
 
             Console.ForegroundColor = ConsoleColor.Green;

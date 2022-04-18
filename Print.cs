@@ -31,7 +31,7 @@ namespace SudokuGame
                     printBoard(grid, num);
                     break;
                 case 4:
-                    num = 12;
+                    num = 9;
                     printBoard(grid, num);
                     break;
                 default:
@@ -52,7 +52,8 @@ namespace SudokuGame
         /// <param name="size"></param>
         public void printBoard(int[,] grid, int size)
         {
-            //string[,] stringGrid = grid.ToString();
+            Console.ForegroundColor = ConsoleColor.Blue;
+                
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
@@ -72,6 +73,8 @@ namespace SudokuGame
                 Console.WriteLine();
             }
             Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Green;
         }
 
     }
