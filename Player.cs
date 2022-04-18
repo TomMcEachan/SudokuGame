@@ -24,7 +24,13 @@ namespace SudokuGame
                 string playerPlacesColumn = "Which column would you like to place the number? (Select a number between 1 & 9) \n\n ";
                 Console.WriteLine(playerPlacesColumn);
                 string playerColumn = Console.ReadLine();
-                int playerColumnInt = Int32.Parse(playerColumn);
+                int playerColumnInt;
+
+                while (!int.TryParse(playerColumn, out playerColumnInt))
+                {
+                    Console.WriteLine("Not a valid selection - please try enter a number between 1 & 9");
+                    playerColumn = Console.ReadLine();
+                }
 
                 if (Enumerable.Range(1, 9).Contains(playerColumnInt))
                 {
@@ -63,7 +69,14 @@ namespace SudokuGame
                 string playerPlacesRow = "Which row would you like to place the number?  (Select a number between 1 & 9)\n\n ";
                 Console.WriteLine(playerPlacesRow);
                 string playerRow = Console.ReadLine();
-                int playerRowInt = Int32.Parse(playerRow);
+                int playerRowInt;
+               
+                while (!int.TryParse(playerRow, out playerRowInt))
+                {
+                    Console.WriteLine("Not a valid selection - please try enter a number between 1 & 9");
+                    playerRow = Console.ReadLine();
+                }
+
 
                 if (Enumerable.Range(1, 9).Contains(playerRowInt))
                 {
@@ -102,7 +115,13 @@ namespace SudokuGame
             {
                 Console.WriteLine(playerPlacesNumber);
                 string playerChoice = Console.ReadLine();
-                int playerChoiceInt = Int32.Parse(playerChoice);
+                int playerChoiceInt;
+
+                while (!int.TryParse(playerChoice, out playerChoiceInt))
+                {
+                    Console.WriteLine("Not a valid selection - please try enter a number between 1 & 9");
+                    playerChoice = Console.ReadLine();
+                }
                 Console.WriteLine();
 
                 if (Enumerable.Range(1, 9).Contains(playerChoiceInt))
