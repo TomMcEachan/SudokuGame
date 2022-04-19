@@ -168,6 +168,32 @@ namespace SudokuGame
             return false;
         }
 
+
+        /// <summary>
+        /// This method checks whether or not the player specified array is already filled or not
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="playerRow"></param>
+        /// <param name="playerColumn"></param>
+        /// <returns>
+        /// True or False
+        /// </returns>
+        static bool AlreadyFilled(int[,] grid, int playerRow, int playerColumn)
+        {
+            int value = grid[playerRow, playerColumn];
+
+            if (value == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        
+
+
+
         /// <summary>
         /// This method takes the generated board and allows the player to play the Sudoku game, turn by turn
         /// </summary>
@@ -178,6 +204,7 @@ namespace SudokuGame
         public int[,] playerInput(int[,] generatedBoard, Print p)
         {
             bool containsZero = true;
+            bool alreadyFilled;
             int turn = 1;
 
             //Player Makes their choice until board is complete
@@ -188,12 +215,26 @@ namespace SudokuGame
 
                 int playerRow = playerInputRow();
                 int playerColumn = playerInputColumn();
+
+                alreadyFilled = AlreadyFilled(generatedBoard, playerRow, playerColumn);
+
+                while (alreadyFilled)
+                {
+                    string message = "A number is already present here. Please select a different location";
+                    Console.WriteLine(message);
+                    playerRow = playerInputRow();
+                    playerColumn = playerInputColumn();
+                    alreadyFilled = AlreadyFilled(generatedBoard, playerRow, playerColumn);
+                }             
+                
                 int playerNum = playerInputNumber(playerRow, playerColumn);
+              
                 generatedBoard[playerRow, playerColumn] = playerNum;
                 containsZero = ArrayContainsZero(generatedBoard);
                 turn++;
 
                 p.printBoard(generatedBoard, 9);
+                
             }
 
             return generatedBoard;
