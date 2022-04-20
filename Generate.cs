@@ -249,8 +249,6 @@ namespace SudokuGame
             }
         }
 
-
-
     }
 }
   

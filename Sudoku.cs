@@ -7,7 +7,6 @@ namespace SudokuGame
 {
     class Sudoku
     {
-
         /// <summary>
         /// The main method of the program
         /// </summary>
@@ -25,7 +24,6 @@ namespace SudokuGame
 
 
             //Plays the Game while the player wants to go again
-
             while(goAgain)
             {
                 goAgain = game.gameplay(p, player, solve);

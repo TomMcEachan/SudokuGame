@@ -112,7 +112,7 @@ namespace SudokuGame
                 case 1:
                     grid = new int[9, 9];
                     Console.WriteLine("\n\nGenerating an easy Sudoku puzzle....\n\n");
-                    Game easyBoard = new Game(grid, 9, 34);
+                    Game easyBoard = new Game(grid, 9, 20);
                     grid = Generate.Create(easyBoard);
                     break;
                 case 2:
