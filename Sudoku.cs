@@ -22,7 +22,6 @@ namespace SudokuGame
             //Variables
             bool goAgain = true;
 
-
             //Plays the Game while the player wants to go again
             while(goAgain)
             {

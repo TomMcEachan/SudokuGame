@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Figgle;
 
 namespace SudokuGame
@@ -58,13 +55,14 @@ namespace SudokuGame
 
             //Generates a partially filled Game board
             int[,] generatedBoard = getGrid(selected);
+            int[,] playerBoard = (int[,])generatedBoard.Clone(); //Creates a clone of the generated board to allow for user manipulation
 
             //Prints the empty board
             printNum = p.print(selected, generatedBoard);
             sqr = Convert.ToInt32(Math.Sqrt(printNum));
 
             //Player Makes their choice until board is complete
-            int[,] playerGrid = player.playerInput(generatedBoard, p);
+            int[,] playerGrid = player.playerInput(playerBoard, p);
 
             //Solves the generated board and stores it in memory
             int[,] solvedBoard = solve.SolveGrid(generatedBoard, printNum, sqr);
@@ -76,6 +74,8 @@ namespace SudokuGame
             {
                 string wrongMessage = "Your game board is incorrect. Would you like to try again?";
                 Console.WriteLine(wrongMessage);
+
+                
             }
             else
             {
@@ -84,7 +84,7 @@ namespace SudokuGame
                 goAgain = GoAgain();
             }
 
-            if (goAgain)
+            while (goAgain)
             {
                 return true;
             }
@@ -190,12 +190,35 @@ namespace SudokuGame
         /// </returns>
         static bool CompareSudoku(int[,] playerGrid, int[,] solvedGrid)
         {
-            if (playerGrid == solvedGrid)
+
+            int[] playerGridFlat = { };
+            int[] solvedGridFlat = { };
+
+            var player = playerGrid.Cast<int>();
+            var solved = solvedGrid.Cast<int>();
+
+            foreach (int i in player)
             {
-                return true;
+                playerGridFlat = playerGridFlat.Append(i).ToArray();
             }
 
-            return false;
+            foreach (int i in solved)
+            {
+                solvedGridFlat = solvedGridFlat.Append(i).ToArray();
+            }
+
+            bool equal;
+            equal = solvedGridFlat.SequenceEqual(playerGridFlat);
+
+            if (equal)
+            {
+                return true;
+            } 
+            else
+            {
+                return false;
+            }
+           
         }
 
 
