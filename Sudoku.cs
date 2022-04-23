@@ -29,7 +29,7 @@ namespace SudokuGame
             }
                
             //Ends the game for the player
-            Console.WriteLine("Thanks for playing!");
+            Console.WriteLine("\n\nThanks for playing!");
             Console.ReadLine();
             Environment.Exit(0);
         }
