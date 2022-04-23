@@ -51,6 +51,7 @@ namespace SudokuGame
             int sqr;
             bool boardCorrect;
             bool goAgain = false;
+            
 
             //Prints the intro and gets the player name
             string name = printIntro();
@@ -142,6 +143,12 @@ namespace SudokuGame
                     Console.WriteLine("\n\nGenerating an test Sudoku puzzle....\n\n");
                     Game testBoard = new Game(grid, 9, 1);
                     grid = Generate.Create(testBoard);
+                    break;
+                case 111:
+                    grid = new int[9, 9];
+                    Console.WriteLine("\n\nGenerating an test Sudoku puzzle....\n\n");
+                    Game testBoard2 = new Game(grid, 9, 2);
+                    grid = Generate.Create(testBoard2);
                     break;
                 default:
                     grid = new int[9, 9];

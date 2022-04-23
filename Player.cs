@@ -10,10 +10,11 @@ namespace SudokuGame
     {
         //Global Variables
         private static string _name; //This represents the players name and will be used in the game save function
+        private static Stack<Moves> _gameMoves = new Stack<Moves>();
 
         //Getters & Setters
         public string Name { get => _name; set => _name = value; }
-
+        public Stack<Moves> GameMoves { get => _gameMoves; set => _gameMoves = value; }
 
         /// <summary>
         /// Player Constructor
@@ -159,56 +160,7 @@ namespace SudokuGame
 
             return 0;
         }
-
-
-        /// <summary>
-        /// This takes a sudoku game board, flattens it into a 1d array and checks that if it contains any zeros. 
-        /// </summary>
-        /// <param name="grid"></param>
-        /// <returns>
-        ///  True or False
-        /// </returns>
-        static bool ArrayContainsZero(int[,] grid)
-        {
-            int[] flatArray = { };
-            var nums = grid.Cast<int>();
-
-            foreach (int i in nums)
-            {
-                flatArray = flatArray.Append(i).ToArray();
-            }
-
-
-            if (flatArray.Contains(0))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-
-        /// <summary>
-        /// This method checks whether or not the player specified array is already filled or not
-        /// </summary>
-        /// <param name="grid"></param>
-        /// <param name="playerRow"></param>
-        /// <param name="playerColumn"></param>
-        /// <returns>
-        /// True or False
-        /// </returns>
-        static bool AlreadyFilled(int[,] grid, int playerRow, int playerColumn)
-        {
-            int value = grid[playerRow, playerColumn];
-
-            if (value == 0)
-            {
-                return false;
-            }
-
-            return true;
-        }
-       
+  
 
         /// <summary>
         /// This method takes the generated board and allows the player to play the Sudoku game, turn by turn
@@ -222,69 +174,53 @@ namespace SudokuGame
             bool containsZero = true;
             bool alreadyFilled;
             int turn = 1;
+            string saveName = default;
 
             //Player Makes their choice until board is complete
             while (containsZero)
             {
-                string TurnNum = $"Turn: {turn} \n\n";
+                string TurnNum = $"Turn: {turn} \n\n"; //Prints the turn num
                 Console.WriteLine(TurnNum);
 
-                int playerRow = playerInputRow();
-                int playerColumn = playerInputColumn();
+                int playerRow = playerInputRow(); //Gets the players choice of row
+                int playerColumn = playerInputColumn(); //Gets the players choice of column
 
-                alreadyFilled = AlreadyFilled(generatedBoard, playerRow, playerColumn);
+                alreadyFilled = Utilities.AlreadyFilled(generatedBoard, playerRow, playerColumn); //Checks if the players space is already full
 
+                //Loops while the player space is already filled until the player selects a space that isn't
                 while (alreadyFilled)
                 {
                     string message = "A number is already present here. Please select a different location";
                     Console.WriteLine(message);
                     playerRow = playerInputRow();
                     playerColumn = playerInputColumn();
-                    alreadyFilled = AlreadyFilled(generatedBoard, playerRow, playerColumn);
-                }             
-                
-                int playerNum = playerInputNumber(playerRow, playerColumn);
+                    alreadyFilled = Utilities.AlreadyFilled(generatedBoard, playerRow, playerColumn);
+                }                    
+
+                int playerNum = playerInputNumber(playerRow, playerColumn); //Gets the players choice of number for the empty space
               
-                generatedBoard[playerRow, playerColumn] = playerNum;
-                containsZero = ArrayContainsZero(generatedBoard);
+                generatedBoard[playerRow, playerColumn] = playerNum; //Appends the players choice of num to the generated board to their selected index
+                containsZero = Utilities.ArrayContainsZero(generatedBoard); //Checks if the generated board still contains space for more numbers
 
-                Stack<Moves> gameMoves = new Stack<Moves>();
+                Moves move = new Moves(playerNum, playerRow, playerColumn);
+                GameMoves.Append(move);
 
-                gameMoves = playerTakesTurn(gameMoves, playerRow, playerColumn, playerNum);
-                turn++;
-
-                Console.WriteLine(gameMoves);
-
-                PlayerSavesGame(state, solvedBoard, generatedBoard, play);
-                //TODO: PlayerLoadsGame(state);
-
+                turn++; //Increments the player turn
+                
                 Utilities.printBoard(generatedBoard, 9);
                 
             }
 
+            _ = PlayerSavesGame(state, solvedBoard, generatedBoard, play, GameMoves, saveName); //Saves the player data as a JSON file
+
             return generatedBoard;
-        }
-
-
-        /// <summary>
-        /// This method takes a turn for the player and adds it to a stack
-        /// </summary>
-        /// <param name="moves"></param>
-        /// <param name="grid"></param>
-        public Stack<Moves> playerTakesTurn(Stack<Moves> moves, int playerRow, int playerColumn, int playerNum)
-        {
-            Moves move = new Moves(playerNum, playerRow, playerColumn);
-
-            moves.Push(move);
-            
-            return moves;
         }
 
 
         public Stack<Moves> playerUndoTurn(Stack<Moves> moves)
         {
             
-
+            
 
 
 
@@ -302,36 +238,77 @@ namespace SudokuGame
         /// <param name="state"></param>
         /// <param name="solvedGrid"></param>
         /// <param name="playerGrid"></param>
-        public void PlayerSavesGame(GameState state, int[,] solvedGrid, int[,] playerGrid, Player play)
+        public string PlayerSavesGame(GameState state, int[,] solvedGrid, int[,] playerGrid, Player play, Stack<Moves> moves, string saveName)
         {
+            //Method variables
             bool saved;
             
+            //Converting 2D Matrix into 1D Array for Save
             int[] solved = Utilities.Convert2DArrayTo1D(solvedGrid);
             int[] player = Utilities.Convert2DArrayTo1D(playerGrid);
 
+            //Prints a save message
             string saveMessage = "Saving.....\n\n";
             Console.WriteLine(saveMessage);
 
-            saved = state.SaveGame(solved, player, play);
+            //Prompts the player for a save name if none exists
+            saveName = PlayerNamesSave(saveName);
 
+            //Saves the game with the data provided
+            saved = state.SaveGame(solved, player, play, moves, saveName);
+
+
+            //If the game is saved a message is printed to the console
             if (saved)
             {
                 string savedMessage = "Game Data Saved\n\n";
                 Console.WriteLine(savedMessage);
+                return saveName;
             }
 
+            //If the game is not saved for whatever reason, an error message is printed to the console
             if (!saved)
             {
                 string unsavedMessage = "Error saving GameData";
                 Console.WriteLine(unsavedMessage);
+                return null;
             }
 
+            return null;
         }
 
         public void PlayerLoadsGame(GameState state)
         {
             string path = "";
             state.LoadGame(path);
+        }
+
+
+
+        /// <summary>
+        /// This method allows the player name their save if their save is not currently null
+        /// </summary>
+        /// <param name="saveName"></param>
+        /// <returns>
+        /// The players desired save name as a string
+        /// </returns>
+        public string PlayerNamesSave(string saveName)
+        {
+            
+            if(String.IsNullOrEmpty(saveName))
+            {
+                string message = "What would you like to name your save?\n\n";
+                Console.WriteLine(message);
+
+                saveName = Console.ReadLine();
+                return saveName;
+
+            } 
+            else
+            {
+                return saveName;
+            }
+                   
         }
 
     }
