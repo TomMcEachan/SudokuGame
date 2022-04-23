@@ -8,6 +8,29 @@ namespace SudokuGame
 {
     class Player
     {
+        //Global Variables
+        private static string _name; //This represents the players name and will be used in the game save function
+
+        //Getters & Setters
+        public string Name { get => _name; set => _name = value; }
+
+
+        /// <summary>
+        /// Player Constructor
+        /// </summary>
+        /// <param name="name"></param>
+        public Player(string name) 
+        {
+            Name = name;
+        }
+
+        /// <summary>
+        /// Empty Player Constructor
+        /// </summary>
+        public Player () { }
+
+        //--------------------------------------------------------------------------//
+
         /// <summary>
         /// This method finds out which column the player wants to place a number on
         /// </summary>
@@ -16,8 +39,7 @@ namespace SudokuGame
         /// </returns>
         public int playerInputColumn()
         {
-
-            bool colNumValid = false;
+            bool colNumValid = false; 
 
             while (!colNumValid)
             {
@@ -43,9 +65,6 @@ namespace SudokuGame
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("That number is not valid. Please type a number between 1 and 9\n\n", Console.ForegroundColor);
                 }
-                
-
-
             }
 
             Console.ForegroundColor = ConsoleColor.Green;
@@ -143,7 +162,7 @@ namespace SudokuGame
 
 
         /// <summary>
-        /// This takes a sudoku gameboard, flattens it into a 1d array and checks that if it contains any zeros. 
+        /// This takes a sudoku game board, flattens it into a 1d array and checks that if it contains any zeros. 
         /// </summary>
         /// <param name="grid"></param>
         /// <returns>
@@ -168,6 +187,29 @@ namespace SudokuGame
             return false;
         }
 
+
+        /// <summary>
+        /// This method checks whether or not the player specified array is already filled or not
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="playerRow"></param>
+        /// <param name="playerColumn"></param>
+        /// <returns>
+        /// True or False
+        /// </returns>
+        static bool AlreadyFilled(int[,] grid, int playerRow, int playerColumn)
+        {
+            int value = grid[playerRow, playerColumn];
+
+            if (value == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+       
+
         /// <summary>
         /// This method takes the generated board and allows the player to play the Sudoku game, turn by turn
         /// </summary>
@@ -175,9 +217,10 @@ namespace SudokuGame
         /// <returns>
         /// The players completed Sudoku board
         /// </returns>
-        public int[,] playerInput(int[,] generatedBoard, Print p)
+        public int[,] playerInput(int[,] generatedBoard, int[,] solvedBoard, GameState state , Player play)
         {
             bool containsZero = true;
+            bool alreadyFilled;
             int turn = 1;
 
             //Player Makes their choice until board is complete
@@ -188,15 +231,111 @@ namespace SudokuGame
 
                 int playerRow = playerInputRow();
                 int playerColumn = playerInputColumn();
+
+                alreadyFilled = AlreadyFilled(generatedBoard, playerRow, playerColumn);
+
+                while (alreadyFilled)
+                {
+                    string message = "A number is already present here. Please select a different location";
+                    Console.WriteLine(message);
+                    playerRow = playerInputRow();
+                    playerColumn = playerInputColumn();
+                    alreadyFilled = AlreadyFilled(generatedBoard, playerRow, playerColumn);
+                }             
+                
                 int playerNum = playerInputNumber(playerRow, playerColumn);
+              
                 generatedBoard[playerRow, playerColumn] = playerNum;
                 containsZero = ArrayContainsZero(generatedBoard);
+
+                Stack<Moves> gameMoves = new Stack<Moves>();
+
+                gameMoves = playerTakesTurn(gameMoves, playerRow, playerColumn, playerNum);
                 turn++;
 
-                p.printBoard(generatedBoard, 9);
+                Console.WriteLine(gameMoves);
+
+                PlayerSavesGame(state, solvedBoard, generatedBoard, play);
+                //TODO: PlayerLoadsGame(state);
+
+                Utilities.printBoard(generatedBoard, 9);
+                
             }
 
             return generatedBoard;
         }
+
+
+        /// <summary>
+        /// This method takes a turn for the player and adds it to a stack
+        /// </summary>
+        /// <param name="moves"></param>
+        /// <param name="grid"></param>
+        public Stack<Moves> playerTakesTurn(Stack<Moves> moves, int playerRow, int playerColumn, int playerNum)
+        {
+            Moves move = new Moves(playerNum, playerRow, playerColumn);
+
+            moves.Push(move);
+            
+            return moves;
+        }
+
+
+        public Stack<Moves> playerUndoTurn(Stack<Moves> moves)
+        {
+            
+
+
+
+
+            return moves;
+        }
+
+        public Stack<Moves> playerRedoTurn(Stack<Moves> moves)
+        {
+            return moves;
+        }
+
+        /// <summary>
+        /// This method saves the players current game data
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="solvedGrid"></param>
+        /// <param name="playerGrid"></param>
+        public void PlayerSavesGame(GameState state, int[,] solvedGrid, int[,] playerGrid, Player play)
+        {
+            bool saved;
+            
+            int[] solved = Utilities.Convert2DArrayTo1D(solvedGrid);
+            int[] player = Utilities.Convert2DArrayTo1D(playerGrid);
+
+            string saveMessage = "Saving.....\n\n";
+            Console.WriteLine(saveMessage);
+
+            saved = state.SaveGame(solved, player, play);
+
+            if (saved)
+            {
+                string savedMessage = "Game Data Saved\n\n";
+                Console.WriteLine(savedMessage);
+            }
+
+            if (!saved)
+            {
+                string unsavedMessage = "Error saving GameData";
+                Console.WriteLine(unsavedMessage);
+            }
+
+        }
+
+        public void PlayerLoadsGame(GameState state)
+        {
+            string path = "";
+            state.LoadGame(path);
+        }
+
     }
+
+
+    
 }

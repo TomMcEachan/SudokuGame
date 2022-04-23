@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Figgle;
 
 namespace SudokuGame
@@ -34,40 +31,47 @@ namespace SudokuGame
             Difficulty = difficulty;
         }
 
+        /// <summary>
+        /// Empty Constructor
+        /// </summary>
         public Game() { }
 
         /// <summary>
         /// This represents the main steps of the Sudoku Game
         /// </summary>
-        /// <param name="p"></param>
-        /// <param name="player"></param>
-        /// <param name="solve"></param>
+        /// <param name="solve"></param
+        /// <param name="state"></param>
         /// <returns>
         /// Whether or not the player wants to have another game
         /// </returns>
-        public bool gameplay(Print p, Player player, Solve solve)
+        public bool Gameplay(Solve solve, GameState state)
         {
             //Variables
             int printNum;
             int sqr;
-            bool boardCorrect = false;
+            bool boardCorrect;
             bool goAgain = false;
 
-            //Prints the intro
-            int selected = printIntro();
+            //Prints the intro and gets the player name
+            string name = printIntro();
+            Player player = new Player(name);
+
+            //Allows the use to select their game mode
+            int selected = getPlayerMode(player);
 
             //Generates a partially filled Game board
             int[,] generatedBoard = getGrid(selected);
+            int[,] playerBoard = (int[,])generatedBoard.Clone(); //Creates a clone of the generated board to allow for user manipulation
 
             //Prints the empty board
-            printNum = p.print(selected, generatedBoard);
+            printNum = Utilities.print(selected, generatedBoard);
             sqr = Convert.ToInt32(Math.Sqrt(printNum));
-
-            //Player Makes their choice until board is complete
-            int[,] playerGrid = player.playerInput(generatedBoard, p);
 
             //Solves the generated board and stores it in memory
             int[,] solvedBoard = solve.SolveGrid(generatedBoard, printNum, sqr);
+
+            //Player Makes their choice until board is complete
+            int[,] playerGrid = player.playerInput(playerBoard, solvedBoard, state, player);
 
             //Compares the SolvedBoard against the PlayerBoard
             boardCorrect = CompareSudoku(playerGrid, solvedBoard);
@@ -75,7 +79,7 @@ namespace SudokuGame
             if (!boardCorrect)
             {
                 string wrongMessage = "Your game board is incorrect. Would you like to try again?";
-                Console.WriteLine(wrongMessage);
+                Console.WriteLine(wrongMessage);          
             }
             else
             {
@@ -84,7 +88,7 @@ namespace SudokuGame
                 goAgain = GoAgain();
             }
 
-            if (goAgain)
+            while (goAgain)
             {
                 return true;
             }
@@ -101,7 +105,7 @@ namespace SudokuGame
         /// <returns>
         /// This returns the sudoku grid based on the parameters set by the player
         /// </returns>
-        static int[,] getGrid(int selectedMode)
+        private static int[,] getGrid(int selectedMode)
         {
 
             int[,] grid;
@@ -112,7 +116,7 @@ namespace SudokuGame
                 case 1:
                     grid = new int[9, 9];
                     Console.WriteLine("\n\nGenerating an easy Sudoku puzzle....\n\n");
-                    Game easyBoard = new Game(grid, 9, 34);
+                    Game easyBoard = new Game(grid, 9, 20);
                     grid = Generate.Create(easyBoard);
                     break;
                 case 2:
@@ -151,21 +155,37 @@ namespace SudokuGame
         }
 
         /// <summary>
+        /// Prints the game intro and asks the player what their name is
+        /// </summary>
+        /// <returns>
+        /// Returns a string of the players name
+        /// </returns>
+        private static string printIntro()
+        {
+            Console.WriteLine(FiggleFonts.Doom.Render("Sudoku Generator!"));
+            Console.WriteLine("-----------------------------");
+            Console.WriteLine("Welcome! This program generates unique, solvable Sudoku puzzles.\n\n");
+
+           string playerName = Utilities.GetPlayerName();
+
+           return playerName;
+
+        }
+
+
+        /// <summary>
         /// Lets the player select the difficulty of the game they want to play.
         /// </summary>
         /// <returns>
         /// selectedModeInt
         /// </returns>
-        static int printIntro()
+        private static int getPlayerMode(Player player)
         {
-            Console.WriteLine(FiggleFonts.Doom.Render("Sudoku Generator!"));
-            Console.WriteLine("-----------------------------");
-            Console.WriteLine("Welcome! This program generates unique, solvable Sudoku puzzles.");
-            Console.WriteLine("To generate a puzzle, please select a difficulty level from the following options by typing 1, 2, 3, or 4.\n\n" +
+            Console.WriteLine("\n\n" + player.Name + ", to generate a puzzle please select a difficulty level from the following options by typing 1, 2, 3, or 4.\n\n" +
                                 " 1 - Easy (Produces a simple 9x9 Sudoku puzzle to solve)\n" +
                                 " 2 - Medium (Produces a more difficult 9x9 Sudoku puzzle to solve)\n" +
                                 " 3 - Hard (Produces a really difficult 9x9 Sudoku puzzle to solve)\n" +
-                                " 4 - Extreme (Produces ridiculously difficult 9x9 Sudoku puzzle to solve\n\n");
+                                " 4 - Extreme (Produces ridiculously difficult 9x9 Sudoku puzzle to solve)\n\n");
 
             string selectedModeString = Console.ReadLine();
             int selectedModeInt;
@@ -188,14 +208,24 @@ namespace SudokuGame
         /// <returns>
         /// True or False
         /// </returns>
-        static bool CompareSudoku(int[,] playerGrid, int[,] solvedGrid)
+       private static bool CompareSudoku(int[,] playerGrid, int[,] solvedGrid)
         {
-            if (playerGrid == solvedGrid)
+
+            int[] playerGridFlat = Utilities.Convert2DArrayTo1D(playerGrid);
+            int[] solvedGridFlat = Utilities.Convert2DArrayTo1D(solvedGrid);
+
+            bool equal;
+            equal = solvedGridFlat.SequenceEqual(playerGridFlat);
+
+            if (equal)
             {
                 return true;
+            } 
+            else
+            {
+                return false;
             }
-
-            return false;
+           
         }
 
 
@@ -205,7 +235,7 @@ namespace SudokuGame
         /// <returns>
         /// True or False
         /// </returns>
-        static bool GoAgain()
+        private static bool GoAgain()
         {
             string message = "Would you like to go again? (Y/N)";
             bool answered = false;

@@ -7,7 +7,6 @@ namespace SudokuGame
 {
     class Sudoku
     {
-
         /// <summary>
         /// The main method of the program
         /// </summary>
@@ -15,20 +14,18 @@ namespace SudokuGame
         static void Main(string[] args)
         {
             //Instantiate Classes
-            Print p = new Print();
-            Player player = new Player();
             Solve solve = new Solve();
             Game game = new Game();
+            GameState state = new GameState();
+          
 
             //Variables
             bool goAgain = true;
 
-
             //Plays the Game while the player wants to go again
-
             while(goAgain)
             {
-                goAgain = game.gameplay(p, player, solve);
+                goAgain = game.Gameplay(solve, state);
             }
                
             //Ends the game for the player
