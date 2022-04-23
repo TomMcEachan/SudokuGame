@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SudokuGame
 {
@@ -10,11 +8,13 @@ namespace SudokuGame
     {
         //Global Variables
         private static string _name; //This represents the players name and will be used in the game save function
-        private static Stack<Moves> _gameMoves = new Stack<Moves>();
+        public Stack<Move> GameMoves = new Stack<Move>();
+        public List<List<int>> movesList = new List<List<int>>();
+
 
         //Getters & Setters
         public string Name { get => _name; set => _name = value; }
-        public Stack<Moves> GameMoves { get => _gameMoves; set => _gameMoves = value; }
+       
 
         /// <summary>
         /// Player Constructor
@@ -202,9 +202,16 @@ namespace SudokuGame
                 generatedBoard[playerRow, playerColumn] = playerNum; //Appends the players choice of num to the generated board to their selected index
                 containsZero = Utilities.ArrayContainsZero(generatedBoard); //Checks if the generated board still contains space for more numbers
 
-                Moves move = new Moves(playerNum, playerRow, playerColumn);
-                GameMoves.Append(move);
+                Move move = new Move(playerNum, playerRow, playerColumn);
+                GameMoves.Push(move);
 
+                movesList.Add(new List<int> { playerNum, playerRow, playerColumn });
+                
+                foreach (Move m in GameMoves)
+                {
+                    Console.WriteLine(m.ColumnLocation + " " + m.RowLocation);    
+                }
+                
                 turn++; //Increments the player turn
                 
                 Utilities.printBoard(generatedBoard, 9);
@@ -217,17 +224,13 @@ namespace SudokuGame
         }
 
 
-        public Stack<Moves> playerUndoTurn(Stack<Moves> moves)
+        public Move playerTakesTurn(int playerNum, int playerRow, int playerColumn)
         {
-            
-            
-
-
-
-            return moves;
+            Move move = new Move(playerNum, playerRow, playerColumn);
+            return move;
         }
 
-        public Stack<Moves> playerRedoTurn(Stack<Moves> moves)
+        public Stack<Move> playerRedoTurn(Stack<Move> moves)
         {
             return moves;
         }
@@ -238,7 +241,7 @@ namespace SudokuGame
         /// <param name="state"></param>
         /// <param name="solvedGrid"></param>
         /// <param name="playerGrid"></param>
-        public string PlayerSavesGame(GameState state, int[,] solvedGrid, int[,] playerGrid, Player play, Stack<Moves> moves, string saveName)
+        public string PlayerSavesGame(GameState state, int[,] solvedGrid, int[,] playerGrid, Player play, Stack<Move> moves, string saveName)
         {
             //Method variables
             bool saved;

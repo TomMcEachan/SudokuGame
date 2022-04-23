@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.IO;
-using System.Collections;
 
 
 namespace SudokuGame
@@ -22,14 +17,14 @@ namespace SudokuGame
         private string _playerName;
         private string _gameName;
         private const string DATE_FORMAT = "dd-MM-yy  HH.mm.ss";
-        private Stack<Moves> _gameMoves;
+        private Stack<Move> _gameMoves;
 
         //Getters and Setters
         public int[] SolvedBoardArray { get=> _solvedBoardArray; set => _solvedBoardArray = value; }
         public int[] PlayerBoardArray { get => _playerBoardArray; set => _playerBoardArray = value; }
         public string PlayerName { get => _playerName; set => _playerName = value; }
         public string GameName { get => _gameName; set => _gameName = value; }
-        public Stack<Moves> GameMoves { get => _gameMoves; set => _gameMoves = value; }
+        public Stack<Move> GameMoves { get => _gameMoves; set => _gameMoves = value; }
 
 
         /// <summary>
@@ -38,7 +33,7 @@ namespace SudokuGame
         /// <param name="solvedArray"></param>
         /// <param name="playerArray"></param>
         /// <param name="player"></param>
-        public GameState (int[] solvedArray, int[] playerArray, Player player, string saveName, Stack<Moves> moves)
+        public GameState (int[] solvedArray, int[] playerArray, Player player, string saveName, Stack<Move> moves)
         {
             SolvedBoardArray = solvedArray;
             PlayerBoardArray = playerArray;
@@ -63,7 +58,7 @@ namespace SudokuGame
         /// <returns>
         /// True or False
         /// </returns>
-        public bool SaveGame (int[] solved, int[] player, Player user, Stack<Moves> moves, string saveName)
+        public bool SaveGame (int[] solved, int[] player, Player user, Stack<Move> moves, string saveName)
         {     
             var SaveGame = new GameState(solved, player, user, saveName, moves);
      
