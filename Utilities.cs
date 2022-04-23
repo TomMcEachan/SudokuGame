@@ -137,5 +137,55 @@ namespace SudokuGame
             return JsonSerializer.Deserialize<T>(text);
         }
 
+
+
+        /// <summary>
+        /// This takes a sudoku game board, flattens it into a 1d array and checks that if it contains any zeros. 
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <returns>
+        ///  True or False
+        /// </returns>
+        public static bool ArrayContainsZero(int[,] grid)
+        {
+            int[] flatArray = { };
+            var nums = grid.Cast<int>();
+
+            foreach (int i in nums)
+            {
+                flatArray = flatArray.Append(i).ToArray();
+            }
+
+
+            if (flatArray.Contains(0))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
+        /// <summary>
+        /// This method checks whether or not the player specified array is already filled or not
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="playerRow"></param>
+        /// <param name="playerColumn"></param>
+        /// <returns>
+        /// True or False
+        /// </returns>
+       public static bool AlreadyFilled(int[,] grid, int playerRow, int playerColumn)
+        {
+            int value = grid[playerRow, playerColumn];
+
+            if (value == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
     }
 }

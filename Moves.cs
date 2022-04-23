@@ -12,13 +12,13 @@ namespace SudokuGame
         private static int _playerNum; //This represents the number the player placed on their turn
         private static int _rowLocation; //This represents the row location of the player placed number
         private static int _columnLocation; //This represents the column location of the player placed number
-        private static int _moveNum; //This represents the move ID
+       
 
         //Getters & Setters
         public int PlayerNum { get => _playerNum; set => _playerNum = value; }
         public int RowLocation { get => _rowLocation; set => _rowLocation = value; }
         public int ColumnLocation { get => _columnLocation; set => _columnLocation = value; }
-        public int MoveNum { get => _moveNum; set => _moveNum = value; }
+        
 
 
 
@@ -26,9 +26,8 @@ namespace SudokuGame
         /// Main Move Constructor
         /// </summary>
         /// <param name="name"></param>
-        public Moves (int playerNumber, int RowLoc, int ColumnLoc, int moveNum)
-        {
-            MoveNum = moveNum;
+        public Moves (int playerNumber, int RowLoc, int ColumnLoc)
+        { 
             PlayerNum = playerNumber;
             RowLocation = RowLoc;
             ColumnLocation = ColumnLoc;
