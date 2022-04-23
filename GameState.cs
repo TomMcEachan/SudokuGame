@@ -22,26 +22,29 @@ namespace SudokuGame
         private string _playerName;
         private string _gameName;
         private const string DATE_FORMAT = "dd-MM-yy  HH.mm.ss";
+        private Stack<Moves> _gameMoves;
 
         //Getters and Setters
-        public int[] solvedBoardArray { get=> _solvedBoardArray; set => _solvedBoardArray = value; }
-        public int[] playerBoardArray { get => _playerBoardArray; set => _playerBoardArray = value; }
-        public string playerName { get => _playerName; set => _playerName = value; }
-        public string gameName { get => _gameName; set => _gameName = value; }
-        
-        
+        public int[] SolvedBoardArray { get=> _solvedBoardArray; set => _solvedBoardArray = value; }
+        public int[] PlayerBoardArray { get => _playerBoardArray; set => _playerBoardArray = value; }
+        public string PlayerName { get => _playerName; set => _playerName = value; }
+        public string GameName { get => _gameName; set => _gameName = value; }
+        public Stack<Moves> GameMoves { get => _gameMoves; set => _gameMoves = value; }
+
+
         /// <summary>
         /// Constructor for the GameState object
         /// </summary>
         /// <param name="solvedArray"></param>
         /// <param name="playerArray"></param>
         /// <param name="player"></param>
-        public GameState (int[] solvedArray, int[] playerArray, Player player, string saveName)
+        public GameState (int[] solvedArray, int[] playerArray, Player player, string saveName, Stack<Moves> moves)
         {
-            solvedBoardArray = solvedArray;
-            playerBoardArray = playerArray;
-            playerName = player.Name;
-            gameName = saveName;
+            SolvedBoardArray = solvedArray;
+            PlayerBoardArray = playerArray;
+            PlayerName = player.Name;
+            GameName = saveName;
+            GameMoves = moves;
         }
         
         /// <summary>
@@ -60,13 +63,9 @@ namespace SudokuGame
         /// <returns>
         /// True or False
         /// </returns>
-        public bool SaveGame (int[] solved, int[] player, Player user)
-        {
-            string message = "What would you like to name your save?";
-            Console.WriteLine(message);
-            string saveName = Console.ReadLine();
-            
-            var SaveGame = new GameState(solved, player, user, saveName);
+        public bool SaveGame (int[] solved, int[] player, Player user, Stack<Moves> moves, string saveName)
+        {     
+            var SaveGame = new GameState(solved, player, user, saveName, moves);
      
             string folderName = @"C:\SudokuGame\SaveData";
             System.IO.Directory.CreateDirectory(folderName);
@@ -79,10 +78,6 @@ namespace SudokuGame
             return true;
         }
 
-        
-       
-
-       
         
         /// <summary>
         /// Returns the specified JSON file
