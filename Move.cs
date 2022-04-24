@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SudokuGame
+﻿namespace SudokuGame
 {
     class Move
     {

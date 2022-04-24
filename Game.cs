@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Figgle;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Figgle;
+
 
 namespace SudokuGame
 {
@@ -105,7 +106,7 @@ namespace SudokuGame
                         selectedNumInt--;
                     }
 
-                    string path = @"C:\SudokuGame\SaveData\" + fileList.ElementAt(selectedNumInt);
+                    string path = AppDomain.CurrentDomain.BaseDirectory + @"\SudokuGame\SaveData\" + fileList.ElementAt(selectedNumInt);
                     state = state.LoadGame(path);
 
                     int[,] board = Utilities.Convert2DArrayTo1D(state.PlayerBoardArray, 9, 9);

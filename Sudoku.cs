@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Figgle;
+
 
 namespace SudokuGame
 {
@@ -15,6 +13,8 @@ namespace SudokuGame
         {
             //Creates a new Instance of Sudoku
             Sudoku sudoku = new Sudoku();
+
+            System.IO.Directory.CreateDirectory(@"SudokuGame\SaveData");
 
             sudoku.SudokuStart();
         }
@@ -39,10 +39,7 @@ namespace SudokuGame
                               "3. Change Colour Settings\n");
             string answer = Console.ReadLine();
 
-            if (answer == )
-            {
-
-            }
+            
             
             //Starts the Game
             game.Start(player);

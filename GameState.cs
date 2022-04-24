@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.IO;
-
+using System.Reflection;
 
 namespace SudokuGame
 {
@@ -18,6 +18,7 @@ namespace SudokuGame
         private string _gameName;
         private const string DATE_FORMAT = "dd-MM-yy  HH.mm.ss";
         private Stack<Move> _gameMoves;
+        private string location = AppDomain.CurrentDomain.BaseDirectory + @"\SudokuGame\SaveData";
 
         //Getters and Setters
         public int[] SolvedBoardArray { get => _solvedBoardArray; set => _solvedBoardArray = value; }
@@ -61,8 +62,8 @@ namespace SudokuGame
         public bool SaveGame(int[] solved, int[] player, Player user, Stack<Move> moves, string saveName)
         {
             var SaveGame = new GameState(solved, player, user, saveName, moves);
-
-            string folderName = @"C:\SudokuGame\SaveData"; //TODO: MAKE THIS LOCATION DYNAMIC
+            
+            string folderName = location; //TODO: MAKE THIS LOCATION DYNAMIC
             System.IO.Directory.CreateDirectory(folderName);
             string fileName = user.Name + "  " + saveName + DateTime.Now.ToString(DATE_FORMAT) + ".json";
             string pathString = System.IO.Path.Combine(folderName, fileName);
@@ -90,7 +91,7 @@ namespace SudokuGame
         public List<String> ReadSavesInDirectory()
         {
             int num = 1;
-            DirectoryInfo directory = new DirectoryInfo(@"C:\SudokuGame\SaveData");
+            DirectoryInfo directory = new DirectoryInfo(location);
             FileInfo[] files = directory.GetFiles("*.json");
             List<string> fileList = new List<string>();
             Console.WriteLine("\n");
@@ -108,7 +109,7 @@ namespace SudokuGame
         public int ReadNumberOfFilesInDirectory()
         {
             int num = 1;
-            DirectoryInfo directory = new DirectoryInfo(@"C:\SudokuGame\SaveData");
+            DirectoryInfo directory = new DirectoryInfo(location);
             FileInfo[] files = directory.GetFiles("*.json");
             List<string> fileList = new List<string>();
 
