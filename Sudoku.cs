@@ -13,6 +13,7 @@ namespace SudokuGame
         {
             //Creates a new Instance of Sudoku
             Sudoku sudoku = new Sudoku();
+            Console.Title = "Sudoku Game";
 
             System.IO.Directory.CreateDirectory(@"SudokuGame\SaveData");
 

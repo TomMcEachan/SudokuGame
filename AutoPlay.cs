@@ -34,7 +34,6 @@ namespace SudokuGame
         {
             List<string> fileList = new List<String>();
             GameState loadedState = new GameState();
-            int numberOfFilesInDirectory = loadedState.ReadNumberOfFilesInDirectory();
             fileList = loadedState.ReadSavesInDirectory();
 
             Console.WriteLine("Which game would you like to replay? Select the corresponding number and press ENTER. (e.g, 9).");
@@ -46,7 +45,7 @@ namespace SudokuGame
                 selectedNumInt--;
             }
 
-            string path = @"C:\SudokuGame\SaveData\" + fileList.ElementAt(selectedNumInt);
+            string path = AppDomain.CurrentDomain.BaseDirectory + @"\SudokuGame\SaveData\" + fileList.ElementAt(selectedNumInt);
             loadedState = loadedState.LoadGame(path);
 
             AutoPlay autoPlay = new AutoPlay(loadedState);
