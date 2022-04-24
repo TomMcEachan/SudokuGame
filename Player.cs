@@ -10,14 +10,12 @@ namespace SudokuGame
         private static string _name; //This represents the players name and will be used in the game save function
         public Stack<Move> GameMoves = new Stack<Move>();
         public List<List<int>> movesList = new List<List<int>>();
+        public int NumOfMoves;
+        public Move DiscardedMove { get; set; }
         
-
-
         //Getters & Setters
         public string Name { get => _name; set => _name = value; }
        
-       
-
         /// <summary>
         /// Player Constructor
         /// </summary>
@@ -32,7 +30,7 @@ namespace SudokuGame
         /// </summary>
         public Player () { }
 
-        //--------------------------------------------------------------------------//
+        //--------------------------------------------------METHODS---------------------------------------------------------------//
 
         /// <summary>
         /// This method finds out which column the player wants to place a number on
@@ -165,7 +163,7 @@ namespace SudokuGame
   
 
         /// <summary>
-        /// This method takes the generated board and allows the player to play the Sudoku game, turn by turn
+        /// This method takes the generated board and allows the player to play the Sudoku game, turn by turn. It saves the game each turn too. 
         /// </summary>
         /// <param name="generatedBoard"></param>
         /// <returns>
@@ -178,14 +176,14 @@ namespace SudokuGame
             bool previousMove = false;
             int turn = 1;
             string saveName = default;
-            string undoMessage = "If you would like to undo your previous move(s) press the left arrow (<---). \n\n\n" +
-                                 "If you would like to redo the move you just undid press the right arrow (--->). \n\n\n" +
-                                 "You can continue to do this until you are happy. Otherwise ENTER to continue...";
+            string undoMessage = "> If you would like to undo your previous move press the left arrow key (<---). \n\n" +
+                                 "> If you would like to redo your previous undo press the right arrow key (--->). \n\n" +
+                                 "> Otherwise press the ENTER key to continue...\n\n";
          
             //Player Makes their choice until board is complete
             while (containsZero)
             {
-                string TurnNum = $"Turn: {turn} \n\n"; //Prints the turn num
+                string TurnNum = $"Turn: {turn}\n\n"; //Prints the turn num
                 Console.WriteLine(TurnNum);
 
                 if (GameMoves.Any())
@@ -203,29 +201,70 @@ namespace SudokuGame
                             switch (key)
                             {
                                 case ConsoleKey.LeftArrow:
-                                    Console.WriteLine("Undoing move");
-                                    PlayerUndoesTurn();
-                                    key = Console.ReadKey(false).Key;
+                                    Console.WriteLine("*Undoing last move*");
+                                    NumOfMoves = GameMoves.Count();
+                                    if (NumOfMoves >= 0)
+                                    {
+                                        Tuple<int[,], Move> t = PlayerUndoesTurn(generatedBoard);
+
+                                        generatedBoard = t.Item1;
+                                        DiscardedMove = t.Item2;
+
+                                        Utilities.printBoard(generatedBoard, 9);
+                                        NumOfMoves = GameMoves.Count();
+                                    }
+                                    
+                                    Console.WriteLine("Press the right arrow to redo the move (--->)\n\n" +
+                                                       "Otherwise press the ENTER key to continue...\n\n");
+
+                                    ConsoleKey keyDown;
+                                    keyDown = Console.ReadKey(false).Key;
+
+                                    if (keyDown == ConsoleKey.RightArrow)
+                                    {
+                                        Console.WriteLine("*Redoing last move*");
+                                        generatedBoard = PlayerRedoesTurn(GameMoves, DiscardedMove, generatedBoard);
+                                        Utilities.printBoard(generatedBoard, 9);
+                                    }
+
+                                    instructionsPrinted = false;
+                                    previousMove = false;
+
+                                    Console.WriteLine("Continuing....\n\n");
                                     break;
                                 case ConsoleKey.RightArrow:
-                                    Console.WriteLine("Redoing move");
-
-                                    key = Console.ReadKey(false).Key;
+                                    if (DiscardedMove != null)
+                                    {
+                                        Console.WriteLine("*Redoing last move*");
+                                        generatedBoard = PlayerRedoesTurn(GameMoves, DiscardedMove, generatedBoard);
+                                        Utilities.printBoard(generatedBoard, 9);
+                                        instructionsPrinted = false;
+                                        previousMove = false;
+                                    } else
+                                    {
+                                        Console.WriteLine("No move to redo!");
+                                        instructionsPrinted = false;
+                                        previousMove = false;
+                                    }                                   
                                     break;
                                 case ConsoleKey.Enter:
                                     instructionsPrinted = false;
                                     previousMove = false;
+                                    Console.WriteLine("Continuing....\n\n");
+                                    Utilities.printBoard(generatedBoard, 9);
+                                    break;
+                                default:
+                                    instructionsPrinted = false;
+                                    previousMove = false;
+                                    Console.WriteLine("Continuing....\n\n");
+                                    Utilities.printBoard(generatedBoard, 9);
                                     break;
                             }
                         }
 
                     }
-                } else if (GameMoves.Count > 0)
-                {
-                    Console.WriteLine("Continuing....");
-                }
-
-
+                } 
+                           
                 int playerRow = playerInputRow(); //Gets the players choice of row
                 int playerColumn = playerInputColumn(); //Gets the players choice of column
 
@@ -246,46 +285,111 @@ namespace SudokuGame
                 generatedBoard[playerRow, playerColumn] = playerNum; //Appends the players choice of num to the generated board to their selected index
                 containsZero = Utilities.ArrayContainsZero(generatedBoard); //Checks if the generated board still contains space for more numbers
 
-                Move move = new Move(playerNum, playerRow, playerColumn);
+                Move move = new Move(playerNum, playerRow, playerColumn, generatedBoard);
                 GameMoves.Push(move);
-
-                //movesList.Add(new List<int> { playerNum, playerRow, playerColumn });
-                
-                //foreach (Move m in GameMoves)
-                //{
-                    //Console.WriteLine(m.ColumnLocation + " " + m.RowLocation);    
-                //}
-                
+        
                 turn++; //Increments the player turn
                 previousMove = true;
                 
-                Utilities.printBoard(generatedBoard, 9);
-                
-            }
+                if(saveName == null)
+                {
+                  saveName = PlayerSavesGameWithName(state, solvedBoard, generatedBoard, play, GameMoves, saveName); //Asks the player what they want to name their files and saves the data as a JSON file
+                } else
+                {
+                    PlayerSavesGameNoName(state, solvedBoard, generatedBoard, play, GameMoves, saveName); //Saves the data as a JSON file with the save name previously selected
+                }
 
-            _ = PlayerSavesGame(state, solvedBoard, generatedBoard, play, GameMoves, saveName); //Saves the player data as a JSON file
+                Utilities.printBoard(generatedBoard, 9);               
+            }
 
             return generatedBoard;
         }
 
+        
         /// <summary>
-        /// 
+        /// This method undoes the players most recent turn
         /// </summary>
-        /// <param name="moves"></param>
-        /// <returns></returns>
-        public Move PlayerUndoesTurn()
+        /// <param name="generatedBoard"></param>
+        /// <returns>
+        /// This returns a tuple of <int[,], Move>
+        /// </returns>
+        public Tuple <int[,], Move> PlayerUndoesTurn(int[,] generatedBoard)
         {
-            Move previousMove = GameMoves.Pop();
-           
+            List<Move> tempList = new List<Move>();
+            List<int> rowList = new List<int>();
+            List<int> columnList = new List<int>();
+            
+            foreach (var m in GameMoves)
+            {
+                tempList.Add(m);
+            }
 
-            return previousMove;
+            for (int i = 0; i < tempList.Count(); i++)
+            {
+                rowList.Add(tempList.ElementAt(i).RowLocation);
+            }
+
+            for (int i = 0; i < tempList.Count(); i++)
+            {
+                columnList.Add(tempList.ElementAt(i).ColumnLocation);
+            }
+
+            int playerRow = rowList.ElementAt(0);
+            int playerColumn = columnList.ElementAt(0);
+
+            generatedBoard[playerRow, playerColumn] = 0;
+
+            Move move = GameMoves.Pop();
+            return new Tuple<int[,], Move>(generatedBoard, move);
+
         }
 
-        public Stack<Move> PlayerRedoesTurn(Stack<Move> moves, Move move)
+        /// <summary>
+        /// This method redoes the players most recent undo
+        /// </summary>
+        /// <param name="stack"></param>
+        /// <param name="move"></param>
+        /// <param name="generatedBoard"></param>
+        /// <returns>
+        /// A reformatted player board
+        /// </returns>
+        public int[,] PlayerRedoesTurn(Stack<Move> stack, Move move, int[,] generatedBoard)
         {
-            moves.Push(move);
+            stack.Push(move);
 
-            return moves;
+            List<Move> tempList = new List<Move>();
+            List<int> rowList = new List<int>();
+            List<int> columnList = new List<int>();
+            List<int> playerNumList = new List<int>();
+
+            foreach (var m in stack)
+            {
+                tempList.Add(m);
+            }
+
+            for (int i = 0; i < tempList.Count(); i++)
+            {
+                rowList.Add(tempList.ElementAt(i).RowLocation);
+            }
+
+            for (int i = 0; i < tempList.Count(); i++)
+            {
+                columnList.Add(tempList.ElementAt(i).ColumnLocation);
+            }
+
+            for (int i = 0; i < tempList.Count(); i++)
+            {
+                playerNumList.Add(tempList.ElementAt(i).PlayerNum);
+            }
+
+            int playerRow = rowList.ElementAt(0);
+            int playerColumn = columnList.ElementAt(0);
+            int playerNum = playerNumList.ElementAt(0);
+
+            generatedBoard[playerRow, playerColumn] = playerNum;
+
+            return generatedBoard;
+           
         }
 
 
@@ -295,7 +399,7 @@ namespace SudokuGame
         /// <param name="state"></param>
         /// <param name="solvedGrid"></param>
         /// <param name="playerGrid"></param>
-        public string PlayerSavesGame(GameState state, int[,] solvedGrid, int[,] playerGrid, Player play, Stack<Move> moves, string saveName)
+        public string PlayerSavesGameWithName(GameState state, int[,] solvedGrid, int[,] playerGrid, Player play, Stack<Move> moves, string saveName)
         {
             //Method variables
             bool saved;
@@ -334,10 +438,45 @@ namespace SudokuGame
             return null;
         }
 
-        public void PlayerLoadsGame(GameState state)
+
+        /// <summary>
+        /// This method saves the players current game data
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="solvedGrid"></param>
+        /// <param name="playerGrid"></param>
+        public void  PlayerSavesGameNoName(GameState state, int[,] solvedGrid, int[,] playerGrid, Player play, Stack<Move> moves, string saveName)
         {
-            string path = "";
-            state.LoadGame(path);
+            //Method variables
+            bool saved;
+
+            //Converting 2D Matrix into 1D Array for Save
+            int[] solved = Utilities.Convert2DArrayTo1D(solvedGrid);
+            int[] player = Utilities.Convert2DArrayTo1D(playerGrid);
+
+            //Prints a save message
+            string saveMessage = "Saving.....\n\n";
+            Console.WriteLine(saveMessage);
+
+            //Saves the game with the data provided
+            saved = state.SaveGame(solved, player, play, moves, saveName);
+
+            //If the game is saved a message is printed to the console
+            if (saved)
+            {
+                string savedMessage = "Game Data Saved\n\n";
+                Console.WriteLine(savedMessage);
+                
+            }
+
+            //If the game is not saved for whatever reason, an error message is printed to the console
+            if (!saved)
+            {
+                string unsavedMessage = "Error saving GameData";
+                Console.WriteLine(unsavedMessage);
+                
+            }
+
         }
 
 

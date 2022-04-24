@@ -13,26 +13,46 @@ namespace SudokuGame
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            //Instantiate Classes
-            Solve solve = new Solve();
-            Game game = new Game();
-            GameState state = new GameState();
-          
+            //Creates a new Instance of Sudoku
+            Sudoku sudoku = new Sudoku();
 
-            //Variables
-            bool goAgain = true;
-
-            //Plays the Game while the player wants to go again
-            while(goAgain)
-            {
-                goAgain = game.Gameplay(solve, state);
-            }
-               
-            //Ends the game for the player
-            Console.WriteLine("\n\nThanks for playing!");
-            Console.ReadLine();
-            Environment.Exit(0);
+            sudoku.SudokuStart();
         }
+
+
+        public void SudokuStart()
+        {
+            //Creates a new instance of Game 
+            Game game = new Game();
+
+            //Creates a new instance of AutoPlay
+            AutoPlay autoPlay = new AutoPlay();
+
+            //Prints the intro and gets the player name
+            string name = game.printIntro();
+            Player player = new Player(name);
+
+            bool playGame = false;
+
+            Console.WriteLine("1. Play the Game\n" +
+                              "2. Auto replay a previous Game\n" +
+                              "3. Change Colour Settings\n");
+            string answer = Console.ReadLine();
+
+            if (answer == )
+            {
+
+            }
+            
+            //Starts the Game
+            game.Start(player);
+
+            //Ends the Game
+            game.End();
+        }
+
+
+
     }
 }
 

@@ -32,6 +32,32 @@ namespace SudokuGame
             return OneDimensionalArray;
         }
 
+
+        /// <summary>
+        /// Converts a 1D array to a 2D array
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="input"></param>
+        /// <param name="height"></param>
+        /// <param name="width"></param>
+        /// <returns>
+        /// A 2D array
+        /// </returns>
+        public static T[,] Convert2DArrayTo1D<T>(T[] input, int height, int width)
+        {
+            T[,] output = new T[height, width];
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    output[i, j] = input[i * width + j];
+                }
+            }
+            return output;
+        }
+
+
+
         /// <summary>
         /// A utility method to print solved/generated Sudoku board
         /// </summary>
@@ -164,7 +190,6 @@ namespace SudokuGame
 
             return false;
         }
-
 
         /// <summary>
         /// This method checks whether or not the player specified array is already filled or not
