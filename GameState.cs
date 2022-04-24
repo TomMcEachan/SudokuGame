@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.IO;
-
+using System.Reflection;
 
 namespace SudokuGame
 {
@@ -18,9 +18,10 @@ namespace SudokuGame
         private string _gameName;
         private const string DATE_FORMAT = "dd-MM-yy  HH.mm.ss";
         private Stack<Move> _gameMoves;
+        private string location = AppDomain.CurrentDomain.BaseDirectory + @"\SudokuGame\SaveData";
 
         //Getters and Setters
-        public int[] SolvedBoardArray { get=> _solvedBoardArray; set => _solvedBoardArray = value; }
+        public int[] SolvedBoardArray { get => _solvedBoardArray; set => _solvedBoardArray = value; }
         public int[] PlayerBoardArray { get => _playerBoardArray; set => _playerBoardArray = value; }
         public string PlayerName { get => _playerName; set => _playerName = value; }
         public string GameName { get => _gameName; set => _gameName = value; }
@@ -33,7 +34,7 @@ namespace SudokuGame
         /// <param name="solvedArray"></param>
         /// <param name="playerArray"></param>
         /// <param name="player"></param>
-        public GameState (int[] solvedArray, int[] playerArray, Player player, string saveName, Stack<Move> moves)
+        public GameState(int[] solvedArray, int[] playerArray, Player player, string saveName, Stack<Move> moves)
         {
             SolvedBoardArray = solvedArray;
             PlayerBoardArray = playerArray;
@@ -41,14 +42,14 @@ namespace SudokuGame
             GameName = saveName;
             GameMoves = moves;
         }
-        
+
         /// <summary>
         /// Empty constructor for the GameState object
         /// </summary>
-        public GameState () { }
+        public GameState() { }
 
         //----------------------------------------------------------------------------------------------//
- 
+
         /// <summary>
         /// This method takes game data and passes it to a Json serializer method
         /// </summary>
@@ -58,34 +59,71 @@ namespace SudokuGame
         /// <returns>
         /// True or False
         /// </returns>
-        public bool SaveGame (int[] solved, int[] player, Player user, Stack<Move> moves, string saveName)
-        {     
+        public bool SaveGame(int[] solved, int[] player, Player user, Stack<Move> moves, string saveName)
+        {
             var SaveGame = new GameState(solved, player, user, saveName, moves);
-     
-            string folderName = @"C:\SudokuGame\SaveData";
+            
+            string folderName = location; //TODO: MAKE THIS LOCATION DYNAMIC
             System.IO.Directory.CreateDirectory(folderName);
-            string fileName = user.Name + "  " + saveName +  DateTime.Now.ToString(DATE_FORMAT) +".json";
+            string fileName = user.Name + "  " + saveName + DateTime.Now.ToString(DATE_FORMAT) + ".json";
             string pathString = System.IO.Path.Combine(folderName, fileName);
             var options = new JsonSerializerOptions { WriteIndented = true };
             string data = JsonSerializer.Serialize(SaveGame, options);
             File.WriteAllText(pathString, data);
-       
+
             return true;
         }
 
-        
+
         /// <summary>
         /// Returns the specified JSON file
         /// </summary>
         /// <param name="loadPath"></param>
         /// <returns></returns>
-        public GameState LoadGame (string loadPath)
+        public GameState LoadGame(string loadPath)
         {
             GameState state = Utilities.ReadSaveFile<GameState>(loadPath);
 
             return state;
-           
+
         }
 
+        public List<String> ReadSavesInDirectory()
+        {
+            int num = 1;
+            DirectoryInfo directory = new DirectoryInfo(location);
+            FileInfo[] files = directory.GetFiles("*.json");
+            List<string> fileList = new List<string>();
+            Console.WriteLine("\n");
+
+            foreach (FileInfo f in files)
+            {
+                Console.WriteLine(num.ToString() + ": " + f.Name + "");
+                fileList.Add(f.Name);
+                num++;
+            }
+
+            return fileList;
+        }
+
+        public int ReadNumberOfFilesInDirectory()
+        {
+            int num = 1;
+            DirectoryInfo directory = new DirectoryInfo(location);
+            FileInfo[] files = directory.GetFiles("*.json");
+            List<string> fileList = new List<string>();
+
+            foreach (FileInfo f in files)
+            {
+                fileList.Add(f.Name);
+                num++;
+            }
+
+            int numOfFiles = fileList.Count;
+
+            return numOfFiles;
+
+        }
     }
+
 }

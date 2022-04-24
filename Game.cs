@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Figgle;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using Figgle;
+
 
 namespace SudokuGame
 {
@@ -10,6 +12,7 @@ namespace SudokuGame
         private static int[,] _grid; //This is the Sudoku Board (e.g, [9,9])
         private static int _size; //This the size of each row/column (e.g, 9) 
         private static int _difficulty; //This is the difficulty of the users game and removes the specified number of digits
+        public int selected {get; set;}
 
 
         //Getters & Setters
@@ -36,6 +39,108 @@ namespace SudokuGame
         /// </summary>
         public Game() { }
 
+        //------------------------------------------METHODS------------------------------------------------------//
+
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// This is the main logic of the game
+        /// </summary>
+        public void Start(Player player)
+        {
+            //Instantiate Classes
+            Solve solve = new Solve();
+            GameState state = new GameState();
+
+            //Variables
+            bool goAgain = true;
+            bool playNew = false;
+            List<string> fileList = new List<String>();
+
+           
+            int numberOfFilesInDirectory = state.ReadNumberOfFilesInDirectory();
+
+            Console.WriteLine($"\n\n{player.Name}, would you like to load a previous game? (Y/N)\n");
+            string answer = Console.ReadLine();
+
+            switch (answer)
+            {
+                case "Y":
+                case "y":
+                    playNew = false;
+                    break;
+                case "N":
+                case "n":
+                    playNew = true;
+                    break;
+                default:
+                    playNew = true;
+                    break;
+            }
+
+            if (numberOfFilesInDirectory != 0 && playNew == false)
+            {
+                if (answer == "Y" || answer == "y" || answer == "yes" || answer == "Yes" || answer == "YES")
+                {
+                    fileList = state.ReadSavesInDirectory();
+                    Console.WriteLine("Which save would you like to reload? Select the corresponding number and press ENTER. (e.g, 9).");
+                    string selectedNumString = Console.ReadLine();
+                    Int32.TryParse(selectedNumString, out int selectedNumInt);
+
+                    while (selectedNumInt > numberOfFilesInDirectory)
+                    {
+                        string message = "That is not a valid selected. Please select a number that corresponds with a save file.\n";
+                        Console.WriteLine(message);
+                        selectedNumString = Console.ReadLine();
+                        Int32.TryParse(selectedNumString, out selectedNumInt);
+                    }
+
+                    if (selectedNumInt > 0)
+                    {
+                        selectedNumInt--;
+                    }
+
+                    string path = AppDomain.CurrentDomain.BaseDirectory + @"\SudokuGame\SaveData\" + fileList.ElementAt(selectedNumInt);
+                    state = state.LoadGame(path);
+
+                    int[,] board = Utilities.Convert2DArrayTo1D(state.PlayerBoardArray, 9, 9);
+
+                    while (goAgain)
+                    {
+                        goAgain = Gameplay(solve, state, player, board);
+                    }
+                }
+            }
+            else if (playNew)
+            {
+                Console.WriteLine("\nStarting a new game...\n\n" +
+                                  "------------------------------------------------------------  ");
+                //Plays the Game while the player wants to go again
+                while (goAgain)
+                {
+                    goAgain = Gameplay(solve, state, player, null);
+                }
+            }
+            else if (numberOfFilesInDirectory == 0)
+            {
+                Console.WriteLine("\n[No save data found in directory]. \n\nStarting a new game instead...\n\n" +
+                                  "------------------------------------------------------------  ");
+
+                //Plays the game while the player wants to go again
+                while (goAgain)
+                {
+                    goAgain = Gameplay(solve, state, player, null);
+                }
+            }
+
+        }
+
         /// <summary>
         /// This represents the main steps of the Sudoku Game
         /// </summary>
@@ -44,25 +149,28 @@ namespace SudokuGame
         /// <returns>
         /// Whether or not the player wants to have another game
         /// </returns>
-        public bool Gameplay(Solve solve, GameState state)
+        public bool Gameplay(Solve solve, GameState state, Player player, int[,] loadedBoard)
         {
             //Variables
             int printNum;
             int sqr;
             bool boardCorrect;
             bool goAgain = false;
-            
+            int[,] generatedBoard = null;
+           
+            //Generates a partially filled Game board only if a board does not already exist from load
+            if (loadedBoard == null)
+            {
+                //Allows the use to select their game mode
+                selected = getPlayerMode(player);
+                int[,] newBoard= getGrid(selected);
+                generatedBoard = newBoard;
+            } else if (loadedBoard != null)
+            {
+                generatedBoard = loadedBoard;
+            }
 
-            //Prints the intro and gets the player name
-            string name = printIntro();
-            Player player = new Player(name);
-
-            //Allows the use to select their game mode
-            int selected = getPlayerMode(player);
-
-            //Generates a partially filled Game board
-            int[,] generatedBoard = getGrid(selected);
-            int[,] playerBoard = (int[,])generatedBoard.Clone(); //Creates a clone of the generated board to allow for user manipulation
+            int[,] playerBoard = ((int[,])generatedBoard.Clone()); //Creates a clone of the generated board to allow for user manipulation
 
             //Prints the empty board
             printNum = Utilities.print(selected, generatedBoard);
@@ -96,8 +204,6 @@ namespace SudokuGame
 
             return false;
         }
-
-
 
         /// <summary>
         /// This method gets the user specified grid 
@@ -167,7 +273,7 @@ namespace SudokuGame
         /// <returns>
         /// Returns a string of the players name
         /// </returns>
-        private static string printIntro()
+        public string printIntro()
         {
             Console.WriteLine(FiggleFonts.Doom.Render("Sudoku Generator!"));
             Console.WriteLine("-----------------------------");
@@ -270,6 +376,18 @@ namespace SudokuGame
             }
                   
             return false;
+        }
+
+        /// <summary>
+        /// This is the main logic of the end of the game
+        /// </summary>
+        public void End()
+        {
+            //Ends the game for the player
+            Console.WriteLine("\n\n\nThanks for playing!\n\n\n" +
+                              "Press ANY KEY to exit the game.\n\n");
+            Console.ReadLine();
+            Environment.Exit(0);
         }
     }
 }
