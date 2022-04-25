@@ -12,7 +12,13 @@ namespace SudokuGame
         public List<List<int>> movesList = new List<List<int>>();
         public int NumOfMoves;
         public Move DiscardedMove { get; set; }
-        
+        TimeSpan gameTime { get; set; }
+        TimeSpan startTime { get; set; }
+        TimeSpan endTime { get; set; }
+        TimeSpan timeTaken { get; set; }
+        TimeSpan timeLeft { get; set; }
+        bool start { get; set; } 
+
         //Getters & Setters
         public string Name { get => _name; set => _name = value; }
        
@@ -182,13 +188,32 @@ namespace SudokuGame
             string undoMessage = "> If you would like to undo your previous move press the left arrow key (<---). \n\n" +
                                  "> If you would like to redo your previous undo press the right arrow key (--->). \n\n" +
                                  "> Otherwise press the ENTER key to continue...\n\n";
-         
+
+            start = true;
             //Player Makes their choice until board is complete
             while (containsZero)
             {
-                string TurnNum = $"Turn: {turn}\n\n"; //Prints the turn num
-                Console.WriteLine(TurnNum);
+                if (start)
+                {
+                    gameTime = time.TimeAmmount;
+                    timeLeft = gameTime;
+                }
 
+                if (!start)
+                {
+                    timeLeft = time.CalculateTimeLeft(timeTaken, gameTime);
+                }
+
+                startTime = time.GetStartTime(); //Gets the start time
+                               
+                string turnNum = $"Turn: {turn}"; //Prints the turn num
+                string format = timeLeft.ToString(@"mm\:ss");
+
+                Console.WriteLine("Turn Data");
+                Console.WriteLine("-------------");
+                Console.WriteLine(turnNum);
+                Console.WriteLine($"Minutes and seconds left: {format}");
+                Console.WriteLine("---------------");
                 if (GameMoves.Any())
                 {
                     while (previousMove)
@@ -302,7 +327,14 @@ namespace SudokuGame
                     PlayerSavesGameNoName(state, solvedBoard, generatedBoard, play, GameMoves, saveName); //Saves the data as a JSON file with the save name previously selected
                 }
 
-                Utilities.printBoard(generatedBoard, 9);               
+                Utilities.printBoard(generatedBoard, 9);
+
+                endTime = time.GetEndTime();
+                timeTaken = time.CalculateTimeTaken(startTime, endTime);
+
+                start = false;
+                Console.WriteLine(timeTaken.TotalSeconds);
+
             }
 
             return generatedBoard;

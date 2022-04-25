@@ -33,9 +33,9 @@ namespace SudokuGame
             //Creates a new instance of AutoPlay
             AutoPlay autoPlay = new AutoPlay();
 
+            //Creates an empty instance of Timer
             Timer time = new Timer();
-            //time.hello();
-
+            
             //Prints the intro and gets the player name
             string name = game.printIntro();
             Player player = new Player(name);

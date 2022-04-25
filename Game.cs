@@ -149,8 +149,10 @@ namespace SudokuGame
             int sqr;
             bool boardCorrect;
             bool goAgain = false;
+            bool timerAdded = false;
             int[,] generatedBoard = null;
-           
+            int[,] playerGrid = { };
+
             //Generates a partially filled Game board only if a board does not already exist from load
             if (loadedBoard == null)
             {
@@ -163,6 +165,9 @@ namespace SudokuGame
                 generatedBoard = loadedBoard;
             }
 
+            timerAdded = addTimer();
+            Timer gameTime = time.CreateTimer(selected, timerAdded);
+
             int[,] playerBoard = ((int[,])generatedBoard.Clone()); //Creates a clone of the generated board to allow for user manipulation
 
             //Prints the empty board
@@ -172,9 +177,18 @@ namespace SudokuGame
             //Solves the generated board and stores it in memory
             int[,] solvedBoard = solve.SolveGrid(generatedBoard, printNum, sqr);
 
-            //Player Makes their choice until board is complete
-            int[,] playerGrid = player.playerInput(playerBoard, solvedBoard, state, player, time);
+            if (timerAdded == true)
+            {
+                //Player Makes their choice until board is complete
+                playerGrid = player.playerInput(playerBoard, solvedBoard, state, player, gameTime);
+            }
 
+            if (timerAdded == false)
+            {
+                //Player Makes their choice until board is complete
+                playerGrid = player.playerInput(playerBoard, solvedBoard, state, player, null);
+            }
+           
             //Compares the SolvedBoard against the PlayerBoard
             boardCorrect = CompareSudoku(playerGrid, solvedBoard);
 
@@ -205,7 +219,7 @@ namespace SudokuGame
         /// <returns>
         /// This returns the sudoku grid based on the parameters set by the player
         /// </returns>
-        private static int[,] getGrid(int selectedMode)
+        private int [,] getGrid(int selectedMode)
         {
 
             int[,] grid;
@@ -304,6 +318,33 @@ namespace SudokuGame
 
             return selectedModeInt;
 
+        }
+
+
+        private static bool addTimer()
+        {
+            bool addTimer = false;
+            string message = "Do you want to add a timer to your game?\n\n";
+            Console.WriteLine(message);
+            string answer = Console.ReadLine();
+
+            switch(answer)
+            {
+                case "Y":
+                case "y":
+                    addTimer = true;
+                    break;
+                case "N":
+                case "n":
+                    addTimer = false;
+                    break;
+                default:
+                    Console.WriteLine("Not a valid selection. Not adding a timer as default...\n\n");
+                    addTimer = false;
+                    break;
+            }
+
+            return addTimer;
         }
 
         /// <summary>
