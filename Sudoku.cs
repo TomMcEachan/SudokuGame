@@ -17,8 +17,6 @@ namespace SudokuGame
 
             System.IO.Directory.CreateDirectory(@"SudokuGame\SaveData");
             
-            
-
             sudoku.SudokuStart();
         }
 
@@ -36,7 +34,7 @@ namespace SudokuGame
             AutoPlay autoPlay = new AutoPlay();
 
             Timer time = new Timer();
-            time.hello();
+            //time.hello();
 
             //Prints the intro and gets the player name
             string name = game.printIntro();
