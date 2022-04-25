@@ -39,7 +39,7 @@ namespace SudokuGame
             Tuple<GameState, bool> t = GetAutoPlayData();
             GameState state = t.Item1;
             bool saveData = t.Item2;
-            bool playGame = false;
+            bool playGame = true;
             List<Move> moveList = new List<Move>();
             List<int[,]> turnList = new List<int[,]>();
             Stack<Move> moveStack = state.GameMoves;

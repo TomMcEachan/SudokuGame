@@ -68,11 +68,10 @@ namespace SudokuGame
                     saveData = t.Item1;
                     playGame = t.Item2;
                     
-                    if (!playGame)
+                    if (!playGame && !saveData)
                     {
                         game.End();
-                    }
-                    if (saveData)
+                    } else if (playGame)
                     {
                         game.Start(player, time);
                     }
