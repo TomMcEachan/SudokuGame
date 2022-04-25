@@ -12,7 +12,14 @@ namespace SudokuGame
         public List<List<int>> movesList = new List<List<int>>();
         public int NumOfMoves;
         public Move DiscardedMove { get; set; }
-        
+        TimeSpan gameTime { get; set; }
+        TimeSpan startTime { get; set; }
+        TimeSpan endTime { get; set; }
+        TimeSpan timeTaken { get; set; }
+        TimeSpan timeLeft { get; set; }
+        bool start { get; set; } 
+
+
         //Getters & Setters
         public string Name { get => _name; set => _name = value; }
        
@@ -65,6 +72,7 @@ namespace SudokuGame
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("That number is not valid. Please type a number between 1 and 9\n\n", Console.ForegroundColor);
+                    Console.ForegroundColor = ConsoleColor.Green;
                 }
             }
 
@@ -108,6 +116,7 @@ namespace SudokuGame
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("That number is not valid. Please type a number between 1 and 9\n\n", Console.ForegroundColor);
+                    Console.ForegroundColor = ConsoleColor.Green;
                 }
             }
 
@@ -153,6 +162,7 @@ namespace SudokuGame
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("That number is not valid. Please type a number between 1 and 9\n\n", Console.ForegroundColor);
+                    Console.ForegroundColor = ConsoleColor.Green;
                 }
             }
 
@@ -169,7 +179,7 @@ namespace SudokuGame
         /// <returns>
         /// The players completed Sudoku board
         /// </returns>
-        public int[,] playerInput(int[,] generatedBoard, int[,] solvedBoard, GameState state , Player play)
+        public int[,] playerInput(int[,] generatedBoard, int[,] solvedBoard, GameState state , Player play, Timer time)
         {
             bool containsZero = true;
             bool alreadyFilled;
@@ -179,12 +189,42 @@ namespace SudokuGame
             string undoMessage = "> If you would like to undo your previous move press the left arrow key (<---). \n\n" +
                                  "> If you would like to redo your previous undo press the right arrow key (--->). \n\n" +
                                  "> Otherwise press the ENTER key to continue...\n\n";
-         
+
+            int[,] startBoard = ((int[,])generatedBoard.Clone()); //Creates a clone of the generated board to allow for user manipulation
+
+            start = true;
             //Player Makes their choice until board is complete
             while (containsZero)
             {
-                string TurnNum = $"Turn: {turn}\n\n"; //Prints the turn num
-                Console.WriteLine(TurnNum);
+                if (time != null)
+                {
+                    if(start)
+                    {
+                        gameTime = time.TimeAmmount;
+                        timeLeft = gameTime;
+                    }
+
+                    if (!start)
+                    {
+                        timeLeft = time.CalculateTimeLeft(timeTaken, gameTime);
+                    }
+
+                    startTime = time.GetStartTime(); //Gets the start time
+                }
+                
+                
+                //Prints Turn Data
+                Console.WriteLine("Turn Data");
+                Console.WriteLine("-------------");
+                Console.WriteLine($"Turn: {turn}");
+                if(time != null)
+                {
+                    string format = timeLeft.ToString(@"mm\:ss");
+                    Console.WriteLine($"Minutes and seconds left: {format}");
+                }
+                Console.WriteLine("---------------");
+
+
 
                 if (GameMoves.Any())
                 {
@@ -289,17 +329,26 @@ namespace SudokuGame
                 GameMoves.Push(move);
         
                 turn++; //Increments the player turn
+
+                if (time != null)
+                {
+                    endTime = time.GetEndTime();
+                    timeTaken = time.CalculateTimeTaken(startTime, endTime);
+                }
+             
                 previousMove = true;
                 
                 if(saveName == null)
                 {
-                  saveName = PlayerSavesGameWithName(state, solvedBoard, generatedBoard, play, GameMoves, saveName); //Asks the player what they want to name their files and saves the data as a JSON file
-                } else
+                  saveName = PlayerSavesGameWithName(state, solvedBoard, generatedBoard, startBoard, play, GameMoves, saveName, timeTaken); //Asks the player what they want to name their files and saves the data as a JSON file
+                } 
+                else
                 {
-                    PlayerSavesGameNoName(state, solvedBoard, generatedBoard, play, GameMoves, saveName); //Saves the data as a JSON file with the save name previously selected
+                    PlayerSavesGameNoName(state, solvedBoard, generatedBoard, startBoard, play, GameMoves, saveName, timeTaken); //Saves the data as a JSON file with the save name previously selected
                 }
 
-                Utilities.printBoard(generatedBoard, 9);               
+                Utilities.printBoard(generatedBoard, 9);
+                start = false;
             }
 
             return generatedBoard;
@@ -399,7 +448,7 @@ namespace SudokuGame
         /// <param name="state"></param>
         /// <param name="solvedGrid"></param>
         /// <param name="playerGrid"></param>
-        public string PlayerSavesGameWithName(GameState state, int[,] solvedGrid, int[,] playerGrid, Player play, Stack<Move> moves, string saveName)
+        public string PlayerSavesGameWithName(GameState state, int[,] solvedGrid, int[,] playerGrid, int[,] gameBoardAtStart, Player play, Stack<Move> moves, string saveName, TimeSpan timeTakenToComplete)
         {
             //Method variables
             bool saved;
@@ -407,6 +456,7 @@ namespace SudokuGame
             //Converting 2D Matrix into 1D Array for Save
             int[] solved = Utilities.Convert2DArrayTo1D(solvedGrid);
             int[] player = Utilities.Convert2DArrayTo1D(playerGrid);
+            int[] startBoard = Utilities.Convert2DArrayTo1D(gameBoardAtStart);
 
             //Prints a save message
             string saveMessage = "Saving.....\n\n";
@@ -416,7 +466,7 @@ namespace SudokuGame
             saveName = PlayerNamesSave(saveName);
 
             //Saves the game with the data provided
-            saved = state.SaveGame(solved, player, play, moves, saveName);
+            saved = state.SaveGame(solved, player, startBoard, play, moves, saveName, timeTakenToComplete);
 
 
             //If the game is saved a message is printed to the console
@@ -445,7 +495,7 @@ namespace SudokuGame
         /// <param name="state"></param>
         /// <param name="solvedGrid"></param>
         /// <param name="playerGrid"></param>
-        public void  PlayerSavesGameNoName(GameState state, int[,] solvedGrid, int[,] playerGrid, Player play, Stack<Move> moves, string saveName)
+        public void  PlayerSavesGameNoName(GameState state, int[,] solvedGrid, int[,] playerGrid, int[,] gameBoardAtStart, Player play, Stack<Move> moves, string saveName, TimeSpan timeTakenToComplete)
         {
             //Method variables
             bool saved;
@@ -453,13 +503,14 @@ namespace SudokuGame
             //Converting 2D Matrix into 1D Array for Save
             int[] solved = Utilities.Convert2DArrayTo1D(solvedGrid);
             int[] player = Utilities.Convert2DArrayTo1D(playerGrid);
+            int[] startBoard = Utilities.Convert2DArrayTo1D(gameBoardAtStart);
 
             //Prints a save message
             string saveMessage = "Saving.....\n\n";
             Console.WriteLine(saveMessage);
 
             //Saves the game with the data provided
-            saved = state.SaveGame(solved, player, play, moves, saveName);
+            saved = state.SaveGame(solved, player, startBoard, play, moves, saveName, timeTakenToComplete);
 
             //If the game is saved a message is printed to the console
             if (saved)

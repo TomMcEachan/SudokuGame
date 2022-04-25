@@ -42,7 +42,7 @@ namespace SudokuGame
         /// <returns>
         /// A 2D array
         /// </returns>
-        public static T[,] Convert2DArrayTo1D<T>(T[] input, int height, int width)
+        public static T[,] Convert1DArrayTo2D<T>(T[] input, int height, int width)
         {
             T[,] output = new T[height, width];
             for (int i = 0; i < height; i++)
@@ -64,7 +64,9 @@ namespace SudokuGame
         /// <param name="size"></param>
         public static void printBoard(int[,] grid, int size)
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine();
+            
 
             for (int i = 0; i < size; i++)
             {
@@ -72,21 +74,36 @@ namespace SudokuGame
                 {
                     if (j % 3 == 0 && j != 0)
                     {
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.Write("| ");
+                        Console.ForegroundColor = ConsoleColor.Green;
                     }
-                    Console.Write(grid[i, j] + " ");
+                    if (grid[i,j] == 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write(grid[i, j] + " ");
+                    } else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write(grid[i, j] + " ");
+                    }
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    
                 }
 
                 if (i % 3 == 2 && i != 8)
                 {
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine();
                     Console.Write("------+-------+------");
+                    Console.ForegroundColor = ConsoleColor.Green;
                 }
                 Console.WriteLine();
             }
             Console.WriteLine();
 
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
 

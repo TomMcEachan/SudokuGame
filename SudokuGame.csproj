@@ -26,7 +26,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>Sudoku Game</ProductName>
-    <ApplicationRevision>8</ApplicationRevision>
+    <ApplicationRevision>14</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -116,6 +116,7 @@
   <ItemGroup>
     <Compile Include="AutoPlay.cs" />
     <Compile Include="Move.cs" />
+    <Compile Include="Timer.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Game.cs" />
