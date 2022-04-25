@@ -190,6 +190,8 @@ namespace SudokuGame
                                  "> If you would like to redo your previous undo press the right arrow key (--->). \n\n" +
                                  "> Otherwise press the ENTER key to continue...\n\n";
 
+            int[,] startBoard = ((int[,])generatedBoard.Clone()); //Creates a clone of the generated board to allow for user manipulation
+
             start = true;
             //Player Makes their choice until board is complete
             while (containsZero)
@@ -338,10 +340,11 @@ namespace SudokuGame
                 
                 if(saveName == null)
                 {
-                  saveName = PlayerSavesGameWithName(state, solvedBoard, generatedBoard, play, GameMoves, saveName, timeTaken); //Asks the player what they want to name their files and saves the data as a JSON file
-                } else
+                  saveName = PlayerSavesGameWithName(state, solvedBoard, generatedBoard, startBoard, play, GameMoves, saveName, timeTaken); //Asks the player what they want to name their files and saves the data as a JSON file
+                } 
+                else
                 {
-                    PlayerSavesGameNoName(state, solvedBoard, generatedBoard, play, GameMoves, saveName, timeTaken); //Saves the data as a JSON file with the save name previously selected
+                    PlayerSavesGameNoName(state, solvedBoard, generatedBoard, startBoard, play, GameMoves, saveName, timeTaken); //Saves the data as a JSON file with the save name previously selected
                 }
 
                 Utilities.printBoard(generatedBoard, 9);
@@ -445,7 +448,7 @@ namespace SudokuGame
         /// <param name="state"></param>
         /// <param name="solvedGrid"></param>
         /// <param name="playerGrid"></param>
-        public string PlayerSavesGameWithName(GameState state, int[,] solvedGrid, int[,] playerGrid, Player play, Stack<Move> moves, string saveName, TimeSpan timeTakenToComplete)
+        public string PlayerSavesGameWithName(GameState state, int[,] solvedGrid, int[,] playerGrid, int[,] gameBoardAtStart, Player play, Stack<Move> moves, string saveName, TimeSpan timeTakenToComplete)
         {
             //Method variables
             bool saved;
@@ -453,6 +456,7 @@ namespace SudokuGame
             //Converting 2D Matrix into 1D Array for Save
             int[] solved = Utilities.Convert2DArrayTo1D(solvedGrid);
             int[] player = Utilities.Convert2DArrayTo1D(playerGrid);
+            int[] startBoard = Utilities.Convert2DArrayTo1D(gameBoardAtStart);
 
             //Prints a save message
             string saveMessage = "Saving.....\n\n";
@@ -462,7 +466,7 @@ namespace SudokuGame
             saveName = PlayerNamesSave(saveName);
 
             //Saves the game with the data provided
-            saved = state.SaveGame(solved, player, play, moves, saveName, timeTakenToComplete);
+            saved = state.SaveGame(solved, player, startBoard, play, moves, saveName, timeTakenToComplete);
 
 
             //If the game is saved a message is printed to the console
@@ -491,7 +495,7 @@ namespace SudokuGame
         /// <param name="state"></param>
         /// <param name="solvedGrid"></param>
         /// <param name="playerGrid"></param>
-        public void  PlayerSavesGameNoName(GameState state, int[,] solvedGrid, int[,] playerGrid, Player play, Stack<Move> moves, string saveName, TimeSpan timeTakenToComplete)
+        public void  PlayerSavesGameNoName(GameState state, int[,] solvedGrid, int[,] playerGrid, int[,] gameBoardAtStart, Player play, Stack<Move> moves, string saveName, TimeSpan timeTakenToComplete)
         {
             //Method variables
             bool saved;
@@ -499,13 +503,14 @@ namespace SudokuGame
             //Converting 2D Matrix into 1D Array for Save
             int[] solved = Utilities.Convert2DArrayTo1D(solvedGrid);
             int[] player = Utilities.Convert2DArrayTo1D(playerGrid);
+            int[] startBoard = Utilities.Convert2DArrayTo1D(gameBoardAtStart);
 
             //Prints a save message
             string saveMessage = "Saving.....\n\n";
             Console.WriteLine(saveMessage);
 
             //Saves the game with the data provided
-            saved = state.SaveGame(solved, player, play, moves, saveName, timeTakenToComplete);
+            saved = state.SaveGame(solved, player, startBoard, play, moves, saveName, timeTakenToComplete);
 
             //If the game is saved a message is printed to the console
             if (saved)

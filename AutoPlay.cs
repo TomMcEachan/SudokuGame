@@ -51,6 +51,9 @@ namespace SudokuGame
                     moveList.Add(m);
                 }
 
+                Console.WriteLine("*Printing GameBoard at Start of Game*");
+                Utilities.printBoard(Utilities.Convert1DArrayTo2D(state.GameBoardAtStartArray, 9, 9), 9);
+
                 foreach (Move m in moveList)
                 {
                     turnList.Add(Utilities.Convert1DArrayTo2D(m.GameBoard, 9, 9));

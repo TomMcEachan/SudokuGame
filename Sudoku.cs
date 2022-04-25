@@ -14,7 +14,8 @@ namespace SudokuGame
             Console.Title = "Sudoku Game";
             //Creates a new Instance of Sudoku
             Sudoku sudoku = new Sudoku();
-            
+            Console.ForegroundColor = ConsoleColor.White;
+
 
             System.IO.Directory.CreateDirectory(@"SudokuGame\SaveData");
             

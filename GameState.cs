@@ -14,6 +14,7 @@ namespace SudokuGame
         //Global Variables
         private int[] _solvedBoardArray;
         private int[] _playerBoardArray;
+        private int[] _gameBoardAtStartArray;
         private string _playerName;
         private string _gameName;
         private const string DATE_FORMAT = "dd-MM-yy  HH.mm.ss";
@@ -24,6 +25,7 @@ namespace SudokuGame
         //Getters and Setters
         public int[] SolvedBoardArray { get => _solvedBoardArray; set => _solvedBoardArray = value; }
         public int[] PlayerBoardArray { get => _playerBoardArray; set => _playerBoardArray = value; }
+        public int[] GameBoardAtStartArray { get => _gameBoardAtStartArray; set => _gameBoardAtStartArray = value; }
         public string PlayerName { get => _playerName; set => _playerName = value; }
         public string GameName { get => _gameName; set => _gameName = value; }
         public Stack<Move> GameMoves { get => _gameMoves; set => _gameMoves = value; }
@@ -36,10 +38,11 @@ namespace SudokuGame
         /// <param name="solvedArray"></param>
         /// <param name="playerArray"></param>
         /// <param name="player"></param>
-        public GameState(int[] solvedArray, int[] playerArray, Player player, string saveName, Stack<Move> moves, TimeSpan timeTakenToComplete)
+        public GameState(int[] solvedArray, int[] playerArray, int[] gameBoardAtStart, Player player, string saveName, Stack<Move> moves, TimeSpan timeTakenToComplete)
         {
             SolvedBoardArray = solvedArray;
             PlayerBoardArray = playerArray;
+            GameBoardAtStartArray = gameBoardAtStart;
             PlayerName = player.Name;
             GameName = saveName;
             GameMoves = moves;
@@ -63,9 +66,9 @@ namespace SudokuGame
         /// <returns>
         /// True or False
         /// </returns>
-        public bool SaveGame(int[] solved, int[] player, Player user, Stack<Move> moves, string saveName, TimeSpan timeTakenToComplete)
+        public bool SaveGame(int[] solved, int[] player, int[] gameBoardAtStart, Player user, Stack<Move> moves, string saveName, TimeSpan timeTakenToComplete)
         {
-            var SaveGame = new GameState(solved, player, user, saveName, moves, timeTakenToComplete);
+            var SaveGame = new GameState(solved, player, gameBoardAtStart, user, saveName, moves, timeTakenToComplete);
             
             string folderName = location; //TODO: MAKE THIS LOCATION DYNAMIC
             System.IO.Directory.CreateDirectory(folderName);
