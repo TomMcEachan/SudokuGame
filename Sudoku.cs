@@ -11,9 +11,10 @@ namespace SudokuGame
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+            Console.Title = "Sudoku Game";
             //Creates a new Instance of Sudoku
             Sudoku sudoku = new Sudoku();
-            Console.Title = "Sudoku Game";
+            
 
             System.IO.Directory.CreateDirectory(@"SudokuGame\SaveData");
             
@@ -42,8 +43,11 @@ namespace SudokuGame
 
             int answerNum;
 
-            Console.WriteLine("1. Play the Game\n" +
-                              "2. Auto replay a previous Game\n");
+            Console.WriteLine("\nMAIN MENU\n" +
+                              "-------------------------------------------------------------\n" +
+                              "1. PLAY THE GAME\n" +
+                              "2. AUTOREPLAY A PREVIOUS GAME (requires a previous save file)\n\n\n\n" +
+                              "Please select an option to continue by typing either 1 or 2");
 
             string answer = Console.ReadLine();
             

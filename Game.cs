@@ -324,7 +324,7 @@ namespace SudokuGame
         private static bool addTimer()
         {
             bool addTimer = false;
-            string message = "Do you want to add a timer to your game?\n\n";
+            string message = "Do you want to add a timer to your game?(Y/N)\n\n";
             Console.WriteLine(message);
             string answer = Console.ReadLine();
 
@@ -332,14 +332,20 @@ namespace SudokuGame
             {
                 case "Y":
                 case "y":
+                case "yes":
+                case "YES":
+                case "Yes":
                     addTimer = true;
                     break;
                 case "N":
                 case "n":
+                case "no":
+                case "NO":
+                case "No":
                     addTimer = false;
                     break;
                 default:
-                    Console.WriteLine("Not a valid selection. Not adding a timer as default...\n\n");
+                    Console.WriteLine("Not a valid selection. Playing defualt game (i.e without a timer)\n\n");
                     addTimer = false;
                     break;
             }
