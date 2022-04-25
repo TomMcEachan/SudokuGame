@@ -65,6 +65,7 @@ namespace SudokuGame
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("That number is not valid. Please type a number between 1 and 9\n\n", Console.ForegroundColor);
+                    Console.ForegroundColor = ConsoleColor.Green;
                 }
             }
 
@@ -108,6 +109,7 @@ namespace SudokuGame
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("That number is not valid. Please type a number between 1 and 9\n\n", Console.ForegroundColor);
+                    Console.ForegroundColor = ConsoleColor.Green;
                 }
             }
 
@@ -153,6 +155,7 @@ namespace SudokuGame
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("That number is not valid. Please type a number between 1 and 9\n\n", Console.ForegroundColor);
+                    Console.ForegroundColor = ConsoleColor.Green;
                 }
             }
 
@@ -169,7 +172,7 @@ namespace SudokuGame
         /// <returns>
         /// The players completed Sudoku board
         /// </returns>
-        public int[,] playerInput(int[,] generatedBoard, int[,] solvedBoard, GameState state , Player play)
+        public int[,] playerInput(int[,] generatedBoard, int[,] solvedBoard, GameState state , Player play, Timer time)
         {
             bool containsZero = true;
             bool alreadyFilled;

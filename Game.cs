@@ -41,18 +41,10 @@ namespace SudokuGame
 
         //------------------------------------------METHODS------------------------------------------------------//
 
-
-
-
-
-
-
-
-
         /// <summary>
         /// This is the main logic of the game
         /// </summary>
-        public void Start(Player player)
+        public void Start(Player player, Timer time)
         {
             //Instantiate Classes
             Solve solve = new Solve();
@@ -109,11 +101,11 @@ namespace SudokuGame
                     string path = AppDomain.CurrentDomain.BaseDirectory + @"\SudokuGame\SaveData\" + fileList.ElementAt(selectedNumInt);
                     state = state.LoadGame(path);
 
-                    int[,] board = Utilities.Convert2DArrayTo1D(state.PlayerBoardArray, 9, 9);
+                    int[,] board = Utilities.Convert1DArrayTo2D(state.PlayerBoardArray, 9, 9);
 
                     while (goAgain)
                     {
-                        goAgain = Gameplay(solve, state, player, board);
+                        goAgain = Gameplay(solve, state, player, board, time);
                     }
                 }
             }
@@ -124,7 +116,8 @@ namespace SudokuGame
                 //Plays the Game while the player wants to go again
                 while (goAgain)
                 {
-                    goAgain = Gameplay(solve, state, player, null);
+                    goAgain = Gameplay(solve, state, player, null, time);
+                    string input = Console.ReadLine();
                 }
             }
             else if (numberOfFilesInDirectory == 0)
@@ -135,7 +128,7 @@ namespace SudokuGame
                 //Plays the game while the player wants to go again
                 while (goAgain)
                 {
-                    goAgain = Gameplay(solve, state, player, null);
+                    goAgain = Gameplay(solve, state, player, null, time);
                 }
             }
 
@@ -149,7 +142,7 @@ namespace SudokuGame
         /// <returns>
         /// Whether or not the player wants to have another game
         /// </returns>
-        public bool Gameplay(Solve solve, GameState state, Player player, int[,] loadedBoard)
+        public bool Gameplay(Solve solve, GameState state, Player player, int[,] loadedBoard, Timer time)
         {
             //Variables
             int printNum;
@@ -180,7 +173,7 @@ namespace SudokuGame
             int[,] solvedBoard = solve.SolveGrid(generatedBoard, printNum, sqr);
 
             //Player Makes their choice until board is complete
-            int[,] playerGrid = player.playerInput(playerBoard, solvedBoard, state, player);
+            int[,] playerGrid = player.playerInput(playerBoard, solvedBoard, state, player, time);
 
             //Compares the SolvedBoard against the PlayerBoard
             boardCorrect = CompareSudoku(playerGrid, solvedBoard);
