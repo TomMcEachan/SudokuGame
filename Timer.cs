@@ -6,7 +6,7 @@ namespace SudokuGame
     {
         public int SecondsTimer { get; set; }
         public TimeSpan TimeAmmount { get; set; }
-        
+
 
         /// <summary>
         /// Timer Constructor
@@ -20,7 +20,7 @@ namespace SudokuGame
         /// <summary>
         /// Empty timer constructor
         /// </summary>
-        public Timer () { }
+        public Timer() { }
 
 
         //--------------------------------------------------------------METHODS---------------------------------------------------------------/
@@ -122,6 +122,6 @@ namespace SudokuGame
             TimeSpan timeLeft = gameTime.Subtract(timeTaken);
 
             return timeLeft;
-        }     
+        }
     }
 }

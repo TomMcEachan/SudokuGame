@@ -12,7 +12,7 @@ namespace SudokuGame
         private static int[,] _grid; //This is the Sudoku Board (e.g, [9,9])
         private static int _size; //This the size of each row/column (e.g, 9) 
         private static int _difficulty; //This is the difficulty of the users game and removes the specified number of digits
-        public int selected {get; set;}
+        public int selected { get; set; }
 
 
         //Getters & Setters
@@ -56,7 +56,7 @@ namespace SudokuGame
             int selectedNumInt;
             List<string> fileList = new List<String>();
 
-           
+
             int numberOfFilesInDirectory = state.ReadNumberOfFilesInDirectory();
 
             Console.WriteLine($"\n\n{player.Name}, would you like to load a previous game? (Y/N)\n");
@@ -170,9 +170,10 @@ namespace SudokuGame
             {
                 //Allows the use to select their game mode
                 selected = getPlayerMode(player);
-                int[,] newBoard= getGrid(selected);
+                int[,] newBoard = getGrid(selected);
                 generatedBoard = newBoard;
-            } else if (loadedBoard != null)
+            }
+            else if (loadedBoard != null)
             {
                 generatedBoard = loadedBoard;
             }
@@ -200,14 +201,14 @@ namespace SudokuGame
                 //Player Makes their choice until board is complete
                 playerGrid = player.playerInputNoTime(playerBoard, solvedBoard, state, player);
             }
-           
+
             //Compares the SolvedBoard against the PlayerBoard
             boardCorrect = CompareSudoku(playerGrid, solvedBoard);
 
             if (!boardCorrect)
             {
                 string wrongMessage = "Your game board is incorrect. Would you like to try again?";
-                Console.WriteLine(wrongMessage);          
+                Console.WriteLine(wrongMessage);
             }
             else
             {
@@ -231,7 +232,7 @@ namespace SudokuGame
         /// <returns>
         /// This returns the sudoku grid based on the parameters set by the player
         /// </returns>
-        private int [,] getGrid(int selectedMode)
+        private int[,] getGrid(int selectedMode)
         {
 
             int[,] grid;
@@ -248,30 +249,30 @@ namespace SudokuGame
                 case 2:
                     grid = new int[9, 9];
                     Console.WriteLine("\n\nGenerating a medium Sudoku puzzle....\n\n");
-                    Game mediumBoard = new Game(grid, 9, 45);
+                    Game mediumBoard = new Game(grid, 9, 30);
                     grid = Generate.Create(mediumBoard);
                     break;
                 case 3:
                     grid = new int[9, 9];
                     Console.WriteLine("\n\nGenerating a hard Sudoku puzzle....\n\n");
-                    Game hardBoard = new Game(grid, 9, 57);
+                    Game hardBoard = new Game(grid, 9, 40);
                     grid = Generate.Create(hardBoard);
                     break;
                 case 4:
                     grid = new int[9, 9];
                     Console.WriteLine("\n\nGenerating an extreme Sudoku puzzle....\n\n");
-                    Game extremeBoard = new Game(grid, 9, 59);
+                    Game extremeBoard = new Game(grid, 9, 45);
                     grid = Generate.Create(extremeBoard);
                     break;
                 case 666:
                     grid = new int[9, 9];
-                    Console.WriteLine("\n\nGenerating an test Sudoku puzzle....\n\n");
+                    Console.WriteLine("\n\nGenerating a test Sudoku puzzle....\n\n");
                     Game testBoard = new Game(grid, 9, 1);
                     grid = Generate.Create(testBoard);
                     break;
                 case 111:
                     grid = new int[9, 9];
-                    Console.WriteLine("\n\nGenerating an test Sudoku puzzle....\n\n");
+                    Console.WriteLine("\n\nGenerating a test Sudoku puzzle....\n\n");
                     Game testBoard2 = new Game(grid, 9, 2);
                     grid = Generate.Create(testBoard2);
                     break;
@@ -298,9 +299,9 @@ namespace SudokuGame
             Console.WriteLine("-----------------------------");
             Console.WriteLine("Welcome! This program generates unique, solvable Sudoku puzzles.\n\n");
 
-           string playerName = Utilities.GetPlayerName();
+            string playerName = Utilities.GetPlayerName();
 
-           return playerName;
+            return playerName;
 
         }
 
@@ -313,11 +314,13 @@ namespace SudokuGame
         /// </returns>
         private static int getPlayerMode(Player player)
         {
-            Console.WriteLine("\n\n" + player.Name + ", to generate a puzzle please select a difficulty level from the following options by typing 1, 2, 3, or 4.\n\n" +
-                                " 1 - Easy - Produces a simple 9x9 Sudoku puzzle to solve. (Optional 7 minute time limit)\n" +
-                                " 2 - Medium - Produces a more difficult 9x9 Sudoku puzzle to solve (Optional 9 minute time limit)\n" +
-                                " 3 - Hard - Produces a really difficult 9x9 Sudoku puzzle to solve (Optional 12 minute time limit)\n" +
-                                " 4 - Extreme - Produces ridiculously difficult 9x9 Sudoku puzzle to solve (Optional 15 minute time limit)\n\n");
+            Console.WriteLine("\n\n" + player.Name +
+                              ", to generate a puzzle please select a difficulty level from the following options by typing 1, 2, 3, or 4.\n\n" +
+                              " 1 - Easy - Produces a simple 9x9 Sudoku puzzle to solve. (Optional 7 minute time limit)\n" +
+                              " 2 - Medium - Produces a more difficult 9x9 Sudoku puzzle to solve (Optional 9 minute time limit)\n" +
+                              " 3 - Hard - Produces a really difficult 9x9 Sudoku puzzle to solve (Optional 12 minute time limit)\n" +
+                              " 4 - Extreme - Produces ridiculously difficult 9x9 Sudoku puzzle to solve (Optional 15 minute time limit)\n\n");
+
 
             string selectedModeString = Console.ReadLine();
             int selectedModeInt;
@@ -340,7 +343,7 @@ namespace SudokuGame
             Console.WriteLine(message);
             string answer = Console.ReadLine();
 
-            switch(answer)
+            switch (answer)
             {
                 case "Y":
                 case "y":
@@ -373,7 +376,7 @@ namespace SudokuGame
         /// <returns>
         /// True or False
         /// </returns>
-       private static bool CompareSudoku(int[,] playerGrid, int[,] solvedGrid)
+        private static bool CompareSudoku(int[,] playerGrid, int[,] solvedGrid)
         {
 
             int[] playerGridFlat = Utilities.Convert2DArrayTo1D(playerGrid);
@@ -385,12 +388,12 @@ namespace SudokuGame
             if (equal)
             {
                 return true;
-            } 
+            }
             else
             {
                 return false;
             }
-           
+
         }
 
 
@@ -426,7 +429,7 @@ namespace SudokuGame
                     answered = false;
                 }
             }
-                  
+
             return false;
         }
 

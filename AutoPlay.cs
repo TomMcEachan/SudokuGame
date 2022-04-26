@@ -12,11 +12,11 @@ namespace SudokuGame
 
         public Stack<int[,]> GameBoardByTurn { get; set; }
 
-        
+
         //AutoPlay Constructor
-        public AutoPlay (GameState autoPlayState)
+        public AutoPlay(GameState autoPlayState)
         {
-            AutoPlayState = autoPlayState;           
+            AutoPlayState = autoPlayState;
         }
 
         //Empty AutoPlay Constructor
@@ -31,7 +31,7 @@ namespace SudokuGame
         /// <returns>
         /// Whether or not there is any save data available
         /// </returns>
-        public Tuple <bool, bool> AutoPlayGame()
+        public Tuple<bool, bool> AutoPlayGame()
         {
             string autoPlayMessage = "\n\nThis mode will auto replay a previous game saved in data, showing you the moves made in the game one by one.\n";
             Console.WriteLine(autoPlayMessage);
@@ -59,10 +59,10 @@ namespace SudokuGame
                     turnList.Add(Utilities.Convert1DArrayTo2D(m.GameBoard, 9, 9));
                 }
 
-                playGame =  TakeTurnByTurn(turnList);
+                playGame = TakeTurnByTurn(turnList);
             }
 
-            return new Tuple <bool, bool>(saveData, playGame) ;
+            return new Tuple<bool, bool>(saveData, playGame);
         }
 
 
@@ -72,8 +72,8 @@ namespace SudokuGame
         /// <returns>
         /// An autoplay object with data from memory
         /// </returns>
-        public Tuple <GameState, bool> GetAutoPlayData()
-        {     
+        public Tuple<GameState, bool> GetAutoPlayData()
+        {
             GameState loadedState = new GameState();
             List<string> fileList = loadedState.ReadSavesInDirectory();
             int numberOfFilesInDirectory = loadedState.ReadNumberOfFilesInDirectory();
@@ -96,14 +96,14 @@ namespace SudokuGame
                 Console.ReadLine();
 
                 if (selectedNumInt > 0)
-                { 
+                {
                     selectedNumInt--;
                 }
 
                 string path = AppDomain.CurrentDomain.BaseDirectory + @"\SudokuGame\SaveData\" + fileList.ElementAt(selectedNumInt);
                 loadedState = loadedState.LoadGame(path);
                 saveData = true;
-                
+
             }
             else if (numberOfFilesInDirectory == 0)
             {
@@ -115,19 +115,19 @@ namespace SudokuGame
         }
 
 
-       /// <summary>
-       /// This method allows the user to see previous game play out turn by turn
-       /// </summary>
-       /// <param name="turnList"></param>
-       /// <returns>
-       /// True or False (whether or not the player wants to play a game)
-       /// </returns>
+        /// <summary>
+        /// This method allows the user to see previous game play out turn by turn
+        /// </summary>
+        /// <param name="turnList"></param>
+        /// <returns>
+        /// True or False (whether or not the player wants to play a game)
+        /// </returns>
         public bool TakeTurnByTurn(List<int[,]> turnList)
         {
             Queue<int[,]> TurnStack = new Queue<int[,]>();
             int turnNum = 1;
-            
-            foreach(int[,] item in turnList)
+
+            foreach (int[,] item in turnList)
             {
                 TurnStack.Enqueue(item);
             }
@@ -168,5 +168,5 @@ namespace SudokuGame
 
             return playGame;
         }
-    }   
+    }
 }

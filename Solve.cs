@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace SudokuGame
 {
@@ -17,6 +13,8 @@ namespace SudokuGame
         /// <returns>
         /// A solved grid.
         /// </returns>
+        
+       
         public int[,] SolveGrid(int[,] grid, int size, int sqr)
         {
             if (grid.Length == 0 || grid == null)

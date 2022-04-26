@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.IO;
-using System.Reflection;
+
 
 namespace SudokuGame
 {
@@ -47,7 +47,7 @@ namespace SudokuGame
             GameName = saveName;
             GameMoves = moves;
             TimeTakenToComplete = timeTakenToComplete;
-            
+
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace SudokuGame
         public bool SaveGame(int[] solved, int[] player, int[] gameBoardAtStart, Player user, Stack<Move> moves, string saveName, TimeSpan timeTakenToComplete)
         {
             var SaveGame = new GameState(solved, player, gameBoardAtStart, user, saveName, moves, timeTakenToComplete);
-            
+
             string folderName = location; //TODO: MAKE THIS LOCATION DYNAMIC
             System.IO.Directory.CreateDirectory(folderName);
             string fileName = user.Name + "  " + saveName + DateTime.Now.ToString(DATE_FORMAT) + ".json";
