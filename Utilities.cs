@@ -8,7 +8,7 @@ using System.Text.Json;
 namespace SudokuGame
 {
     class Utilities
-    { 
+    {
         /// <summary>
         /// Converts a 2D Array to A 1D array
         /// </summary>
@@ -66,7 +66,8 @@ namespace SudokuGame
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine();
-            
+
+
 
             for (int i = 0; i < size; i++)
             {
@@ -78,18 +79,19 @@ namespace SudokuGame
                         Console.Write("| ");
                         Console.ForegroundColor = ConsoleColor.Green;
                     }
-                    if (grid[i,j] == 0)
+                    if (grid[i, j] == 0)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write(grid[i, j] + " ");
-                    } else
+                    }
+                    else
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.Write(grid[i, j] + " ");
                     }
 
                     Console.ForegroundColor = ConsoleColor.Green;
-                    
+
                 }
 
                 if (i % 3 == 2 && i != 8)
@@ -216,7 +218,7 @@ namespace SudokuGame
         /// <returns>
         /// True or False
         /// </returns>
-       public static bool AlreadyFilled(int[,] grid, int playerRow, int playerColumn)
+        public static bool AlreadyFilled(int[,] grid, int playerRow, int playerColumn)
         {
             int value = grid[playerRow, playerColumn];
 
