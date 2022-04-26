@@ -181,7 +181,7 @@ namespace SudokuGame
         /// <returns>
         /// The players completed Sudoku board
         /// </returns>
-        public int[,] playerInput(int[,] generatedBoard, int[,] solvedBoard, GameState state, Player play, Timer time)
+        public int[,] playerInputTimed(int[,] generatedBoard, int[,] solvedBoard, GameState state, Player play, Timer time)
         {
             bool containsZero = true;
             bool alreadyFilled;
@@ -216,7 +216,7 @@ namespace SudokuGame
                     startTime = time.GetStartTime(); //Gets the start time
                 }
 
-                if (timeLeft != zero)
+                if (timeLeft > zero)
                 {
                     //Prints Turn Data
                     Console.WriteLine("Turn Data");
@@ -333,17 +333,152 @@ namespace SudokuGame
                     Utilities.printBoard(generatedBoard, 9);
                     
                     start = false;
-                } else if (timeLeft == zero)
+                } 
+                
+                if (timeLeft < zero)
                 {
                     Console.WriteLine("You Lose - you ran out of time!");
                     containsZero = false;
                 }
 
-                //combinedTime = time.CalculateCombinedTime(timeTaken, );
+                
             }
             return generatedBoard;
-        }        
-    
+        }
+
+        /// <summary>
+        /// This method takes the generated board and allows the player to play the Sudoku game, turn by turn. It saves the game each turn too. 
+        /// </summary>
+        /// <param name="generatedBoard"></param>
+        /// <returns>
+        /// The players completed Sudoku board
+        /// </returns>
+        public int[,] playerInputNoTime(int[,] generatedBoard, int[,] solvedBoard, GameState state, Player play)
+        {
+            bool containsZero = true;
+            bool alreadyFilled;
+            bool previousMove = false;
+            bool firstMove = true;
+            bool movesEmpty = false;
+            int turn = 1;
+            TimeSpan zero = TimeSpan.Zero;
+            string saveName = default;
+            string undoMessage = "Would you like to undo/redo a move? \n\n";
+
+            int[,] startBoard = ((int[,])generatedBoard.Clone()); //Creates a clone of the generated board to allow for user manipulation
+
+            start = true;
+
+            //Player Makes their choice until board is complete
+            while (containsZero)
+            {
+                
+                    //Prints Turn Data
+                    Console.WriteLine("Turn Data");
+                    Console.WriteLine("-------------");
+                    Console.WriteLine($"Turn: {turn}");
+                    Console.WriteLine("---------------");
+
+                    if (GameMoves.Any())
+                    {
+                        while (previousMove)
+                        {
+                            Console.WriteLine(undoMessage);
+                            bool instructionsPrinted = true;
+                            string answer = Console.ReadLine();
+
+                            while (instructionsPrinted)
+                            {
+                                switch (answer)
+                                {
+                                    case "Y":
+                                    case "y":
+                                    case "yes":
+                                    case "YES":
+                                    case "Yes":
+                                        movesEmpty = UndoRedoUntilEmpty(generatedBoard);
+                                        previousMove = false;
+                                        instructionsPrinted = false;
+                                        firstMove = false;
+                                        break;
+                                    case "N":
+                                    case "n":
+                                    case "no":
+                                    case "NO":
+                                    case "No":
+                                        instructionsPrinted = false;
+                                        previousMove = false;
+                                        firstMove = false;
+                                        Console.WriteLine("Continuing....\n\n");
+                                        Utilities.printBoard(generatedBoard, 9);
+                                        break;
+                                    default:
+                                        instructionsPrinted = false;
+                                        previousMove = false;
+                                        firstMove = false;
+                                        Console.WriteLine($"{answer} is not a valid selection. Continuing....\n\n");
+                                        Utilities.printBoard(generatedBoard, 9);
+                                        break;
+                                }
+                            }
+
+                        }
+                    }
+
+                    if (movesEmpty && !firstMove)
+                    {
+                        Console.WriteLine("No more moves left undo/redo");
+                    }
+
+                    if (!firstMove)
+                    {
+                        Console.WriteLine("\nNew move starting....\n");
+                        Utilities.printBoard(generatedBoard, 9);
+                    }
+
+                    int playerRow = playerInputRow(); //Gets the players choice of row
+                    int playerColumn = playerInputColumn(); //Gets the players choice of column
+
+                    alreadyFilled = Utilities.AlreadyFilled(generatedBoard, playerRow, playerColumn); //Checks if the players space is already full
+
+                    //Loops while the player space is already filled until the player selects a space that isn't
+                    while (alreadyFilled)
+                    {
+                        string message = "A number is already present here. Please select a different location";
+                        Console.WriteLine(message);
+                        playerRow = playerInputRow();
+                        playerColumn = playerInputColumn();
+                        alreadyFilled = Utilities.AlreadyFilled(generatedBoard, playerRow, playerColumn);
+                    }
+
+                    int playerNum = playerInputNumber(playerRow, playerColumn); //Gets the players choice of number for the empty space
+
+                    generatedBoard[playerRow, playerColumn] = playerNum; //Appends the players choice of num to the generated board to their selected index
+                    containsZero = Utilities.ArrayContainsZero(generatedBoard); //Checks if the generated board still contains space for more numbers
+
+                    Move move = new Move(playerNum, playerRow, playerColumn, generatedBoard);
+                    GameMoves.Push(move);
+
+                    turn++; //Increments the player turn
+
+                    previousMove = true;
+
+                    if (saveName == null)
+                    {
+                        saveName = PlayerSavesGameWithName(state, solvedBoard, generatedBoard, startBoard, play, GameMoves, saveName, timeTaken); //Asks the player what they want to name their files and saves the data as a JSON file
+                    }
+                    else
+                    {
+                        PlayerSavesGameNoName(state, solvedBoard, generatedBoard, startBoard, play, GameMoves, saveName, timeTaken); //Saves the data as a JSON file with the save name previously selected
+                    }
+
+                    Utilities.printBoard(generatedBoard, 9);
+
+                    start = false;
+            }
+            return generatedBoard;
+        }
+
 
         /// <summary>
         /// This method undoes the players most recent turn

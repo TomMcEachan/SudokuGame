@@ -42,16 +42,19 @@ namespace SudokuGame
                 switch (modeSelected)
                 {
                     case 1:
-                        timeSelected = TimeSpan.FromMilliseconds(900000);
+                        timeSelected = TimeSpan.FromMilliseconds(420000);
                         break;
                     case 2:
-                        timeSelected = TimeSpan.FromMilliseconds(600000);
+                        timeSelected = TimeSpan.FromMilliseconds(540000);
                         break;
                     case 3:
-                        timeSelected = TimeSpan.FromMilliseconds(600000);
+                        timeSelected = TimeSpan.FromMilliseconds(720000);
                         break;
                     case 4:
-                        timeSelected = TimeSpan.FromMilliseconds(420000);
+                        timeSelected = TimeSpan.FromMilliseconds(900000);
+                        break;
+                    case 111:
+                        timeSelected = TimeSpan.FromMilliseconds(60000);
                         break;
                     default:
                         timeSelected = TimeSpan.FromMilliseconds(600000);

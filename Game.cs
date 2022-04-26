@@ -192,13 +192,13 @@ namespace SudokuGame
             if (timerAdded == true)
             {
                 //Player Makes their choice until board is complete
-                playerGrid = player.playerInput(playerBoard, solvedBoard, state, player, gameTime);
+                playerGrid = player.playerInputTimed(playerBoard, solvedBoard, state, player, gameTime);
             }
 
             if (timerAdded == false)
             {
                 //Player Makes their choice until board is complete
-                playerGrid = player.playerInput(playerBoard, solvedBoard, state, player, null);
+                playerGrid = player.playerInputNoTime(playerBoard, solvedBoard, state, player);
             }
            
             //Compares the SolvedBoard against the PlayerBoard
@@ -314,10 +314,10 @@ namespace SudokuGame
         private static int getPlayerMode(Player player)
         {
             Console.WriteLine("\n\n" + player.Name + ", to generate a puzzle please select a difficulty level from the following options by typing 1, 2, 3, or 4.\n\n" +
-                                " 1 - Easy (Produces a simple 9x9 Sudoku puzzle to solve)\n" +
-                                " 2 - Medium (Produces a more difficult 9x9 Sudoku puzzle to solve)\n" +
-                                " 3 - Hard (Produces a really difficult 9x9 Sudoku puzzle to solve)\n" +
-                                " 4 - Extreme (Produces ridiculously difficult 9x9 Sudoku puzzle to solve)\n\n");
+                                " 1 - Easy - Produces a simple 9x9 Sudoku puzzle to solve. (Optional 7 minute time limit)\n" +
+                                " 2 - Medium - Produces a more difficult 9x9 Sudoku puzzle to solve (Optional 9 minute time limit)\n" +
+                                " 3 - Hard - Produces a really difficult 9x9 Sudoku puzzle to solve (Optional 12 minute time limit)\n" +
+                                " 4 - Extreme - Produces ridiculously difficult 9x9 Sudoku puzzle to solve (Optional 15 minute time limit)\n\n");
 
             string selectedModeString = Console.ReadLine();
             int selectedModeInt;
