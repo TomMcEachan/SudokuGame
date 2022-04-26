@@ -11,8 +11,8 @@
         /// Main Move Constructor
         /// </summary>
         /// <param name="name"></param>
-        public Move (int playerNumber, int RowLoc, int ColumnLoc, int[,] gameBoard)
-        { 
+        public Move(int playerNumber, int RowLoc, int ColumnLoc, int[,] gameBoard)
+        {
             PlayerNum = playerNumber;
             RowLocation = RowLoc;
             ColumnLocation = ColumnLoc;
@@ -22,6 +22,6 @@
         /// <summary>
         /// Empty Moves Constructor
         /// </summary>
-        public Move () { }
+        public Move() { }
     }
 }

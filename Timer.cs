@@ -6,7 +6,7 @@ namespace SudokuGame
     {
         public int SecondsTimer { get; set; }
         public TimeSpan TimeAmmount { get; set; }
-        
+
 
         /// <summary>
         /// Timer Constructor
@@ -20,7 +20,7 @@ namespace SudokuGame
         /// <summary>
         /// Empty timer constructor
         /// </summary>
-        public Timer () { }
+        public Timer() { }
 
 
         //--------------------------------------------------------------METHODS---------------------------------------------------------------/
@@ -42,16 +42,19 @@ namespace SudokuGame
                 switch (modeSelected)
                 {
                     case 1:
-                        timeSelected = TimeSpan.FromMilliseconds(900000);
+                        timeSelected = TimeSpan.FromMilliseconds(420000);
                         break;
                     case 2:
-                        timeSelected = TimeSpan.FromMilliseconds(600000);
+                        timeSelected = TimeSpan.FromMilliseconds(540000);
                         break;
                     case 3:
-                        timeSelected = TimeSpan.FromMilliseconds(600000);
+                        timeSelected = TimeSpan.FromMilliseconds(720000);
                         break;
                     case 4:
-                        timeSelected = TimeSpan.FromMilliseconds(420000);
+                        timeSelected = TimeSpan.FromMilliseconds(900000);
+                        break;
+                    case 111:
+                        timeSelected = TimeSpan.FromMilliseconds(60000);
                         break;
                     default:
                         timeSelected = TimeSpan.FromMilliseconds(600000);
@@ -100,7 +103,7 @@ namespace SudokuGame
         public TimeSpan CalculateTimeTaken(TimeSpan startTime, TimeSpan endTime)
         {
             TimeSpan timeTaken;
-            timeTaken = endTime - startTime;
+            timeTaken = endTime.Subtract(startTime);
 
             return timeTaken;
         }
@@ -116,7 +119,7 @@ namespace SudokuGame
         /// </returns>
         public TimeSpan CalculateTimeLeft(TimeSpan timeTaken, TimeSpan gameTime)
         {
-            TimeSpan timeLeft = gameTime - timeTaken;
+            TimeSpan timeLeft = gameTime.Subtract(timeTaken);
 
             return timeLeft;
         }

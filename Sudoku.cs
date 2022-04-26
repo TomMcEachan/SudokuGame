@@ -1,6 +1,7 @@
 ﻿using System;
 
 
+
 namespace SudokuGame
 {
     class Sudoku
@@ -11,6 +12,7 @@ namespace SudokuGame
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+            
             Console.Title = "Sudoku Game";
             //Creates a new Instance of Sudoku
             Sudoku sudoku = new Sudoku();

@@ -10,9 +10,9 @@ namespace SudokuGame
 
         //Global Variables 
         private static int[,] grid;
-        private static int size; 
-        private static int sqr; 
-        private static int  remove;
+        private static int size;
+        private static int sqr;
+        private static int remove;
 
         //Getters and Setters
         public static int[,] Grid { get => grid; set => grid = value; }
@@ -43,8 +43,8 @@ namespace SudokuGame
             }
 
 
-           Generate gen = new Generate();
-           gen.GenerateGrid();
+            Generate gen = new Generate();
+            gen.GenerateGrid();
 
             return Grid;
         }
@@ -54,7 +54,7 @@ namespace SudokuGame
         /// This method iterates through the different steps to generate a brand new game board
         /// </summary>
         public void GenerateGrid()
-        { 
+        {
             fillDiagonal();
             fillRemaining(0, Sqr);
             removeDigits();
@@ -67,10 +67,10 @@ namespace SudokuGame
         void fillDiagonal()
         {
             for (int i = 0; i < Size; i = i + Sqr)
-            fillBox(i, i);
+                fillBox(i, i);
         }
 
-        
+
         /// <summary>
         /// This method checks if the 3 x 3 box contains a num
         /// </summary>
@@ -111,7 +111,7 @@ namespace SudokuGame
                     Grid[row + i, col + j] = num;
                 }
             }
-        }     
+        }
 
         /// <summary>
         /// Creates a random number 
@@ -251,5 +251,5 @@ namespace SudokuGame
 
     }
 }
-  
+
 
