@@ -53,6 +53,7 @@ namespace SudokuGame
             //Variables
             bool goAgain = true;
             bool playNew = false;
+            int selectedNumInt;
             List<string> fileList = new List<String>();
 
            
@@ -83,14 +84,25 @@ namespace SudokuGame
                     fileList = state.ReadSavesInDirectory();
                     Console.WriteLine("Which save would you like to reload? Select the corresponding number and press ENTER. (e.g, 9).");
                     string selectedNumString = Console.ReadLine();
-                    Int32.TryParse(selectedNumString, out int selectedNumInt);
+
+                    while (!int.TryParse(selectedNumString, out selectedNumInt))
+                    {
+                        Console.WriteLine("That is not a valid selection. Please enter either 1 or 2 to select your mode.");
+                        selectedNumString = Console.ReadLine();
+                    }
+
 
                     while (selectedNumInt > numberOfFilesInDirectory)
                     {
                         string message = "That is not a valid selected. Please select a number that corresponds with a save file.\n";
                         Console.WriteLine(message);
                         selectedNumString = Console.ReadLine();
-                        Int32.TryParse(selectedNumString, out selectedNumInt);
+
+                        while (!int.TryParse(selectedNumString, out selectedNumInt))
+                        {
+                            Console.WriteLine("That is not a valid selection. Please enter either 1 or 2 to select your mode.");
+                            selectedNumString = Console.ReadLine();
+                        }
                     }
 
                     if (selectedNumInt > 0)

@@ -78,21 +78,32 @@ namespace SudokuGame
             List<string> fileList = loadedState.ReadSavesInDirectory();
             int numberOfFilesInDirectory = loadedState.ReadNumberOfFilesInDirectory();
             bool saveData = true;
+            int selectedNumInt;
 
             if (numberOfFilesInDirectory != 0)
             {
-                Console.WriteLine("Which game would you like to replay? Select the corresponding number and press ENTER. (e.g, 9).");
+                Console.WriteLine("\nWhich game would you like to replay? Select the corresponding number and press ENTER. (e.g, 9).");
                 string selectedNumString = Console.ReadLine();
-                Int32.TryParse(selectedNumString, out int selectedNumInt);
+
+                while (!int.TryParse(selectedNumString, out selectedNumInt))
+                {
+                    Console.WriteLine("\nThat is not a valid selection. Please enter a corresponding number and press ENTER.");
+                    selectedNumString = Console.ReadLine();
+                }
+
+                Console.WriteLine($"\n\nReplaying save number {selectedNumString}...\n\n");
+                Console.WriteLine("Press ENTER to continue");
+                Console.ReadLine();
 
                 if (selectedNumInt > 0)
-                {
+                { 
                     selectedNumInt--;
                 }
 
                 string path = AppDomain.CurrentDomain.BaseDirectory + @"\SudokuGame\SaveData\" + fileList.ElementAt(selectedNumInt);
                 loadedState = loadedState.LoadGame(path);
                 saveData = true;
+                
             }
             else if (numberOfFilesInDirectory == 0)
             {

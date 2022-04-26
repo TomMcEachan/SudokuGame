@@ -100,7 +100,7 @@ namespace SudokuGame
         public TimeSpan CalculateTimeTaken(TimeSpan startTime, TimeSpan endTime)
         {
             TimeSpan timeTaken;
-            timeTaken = endTime - startTime;
+            timeTaken = endTime.Subtract(startTime);
 
             return timeTaken;
         }
@@ -116,9 +116,9 @@ namespace SudokuGame
         /// </returns>
         public TimeSpan CalculateTimeLeft(TimeSpan timeTaken, TimeSpan gameTime)
         {
-            TimeSpan timeLeft = gameTime - timeTaken;
+            TimeSpan timeLeft = gameTime.Subtract(timeTaken);
 
             return timeLeft;
-        }
+        }     
     }
 }
