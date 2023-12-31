@@ -7,3 +7,5 @@ More information about this project can be found in the [academic report](https:
 ## Watch the Demo
 https://github.com/TomMcEachan/SudokuGame/assets/38360055/6d3d7b71-957f-4997-a85b-66eeba979211
 
+## Play the Game
+https://github.com/TomMcEachan/SudokuGame/releases
